@@ -35,6 +35,15 @@
                         <p class="font-semibold text-white">{{ $user->name }}</p>
                         <p class="mt-1 text-teal-100">{{ $user->email }}</p>
                         <p class="mt-1 text-xs uppercase tracking-wide text-teal-200">Rol: {{ ucfirst($rol ?? 'sin rol') }}</p>
+                        <form class="mt-4" method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button
+                                type="submit"
+                                class="inline-flex w-full items-center justify-center rounded-xl border border-teal-200/30 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+                            >
+                                Cerrar sesión
+                            </button>
+                        </form>
                     </div>
                 @endif
 
@@ -48,6 +57,25 @@
             </aside>
 
             <main class="flex-1 px-6 py-8 lg:px-10">
+                @if ($user)
+                    <div class="mb-5 flex items-center justify-between rounded-2xl bg-white px-4 py-3 shadow-sm ring-1 ring-slate-200 lg:hidden">
+                        <div>
+                            <p class="text-sm font-semibold text-slate-900">{{ $user->name }}</p>
+                            <p class="text-xs text-slate-500">Rol: {{ ucfirst($rol ?? 'sin rol') }}</p>
+                        </div>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button
+                                type="submit"
+                                class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+                            >
+                                Salir
+                            </button>
+                        </form>
+                    </div>
+                @endif
+
                 @hasSection('module_nav')
                     <div class="mb-5">
                         @yield('module_nav')
