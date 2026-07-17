@@ -1,58 +1,201 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Formulas Medicas Web
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicacion web en Laravel para la gestion de formulas medicas en dispensario, con control por roles e interfaz diferenciada por actor.
 
-## About Laravel
+## Funcionalidades implementadas
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Login, registro y logout para usuarios del sistema.
+- Interfaces por rol:
+	- cliente
+	- despachador
+	- administrativo
+- Middleware de rol para proteger rutas web.
+- API REST para formulas medicas protegida con JWT (`auth:api`).
+- Endpoints de autenticacion API (`register`, `login`, `me`, `logout`).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requisitos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.3+
+- Composer
+- Node.js
+- MySQL o motor configurado en `.env`
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalacion
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Dependencias para modulo API/JWT
 
-## Contributing
+Instala los paquetes si aun no estan en tu entorno:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+composer require laravel/breeze --dev
+php artisan breeze:install blade
+composer require tymon/jwt-auth
+php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
+php artisan jwt:secret
+```
 
-## Code of Conduct
+## Base de datos y datos semilla
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan migrate
+php artisan db:seed
+```
 
-## Security Vulnerabilities
+Seeder crea roles base y usuarios de prueba:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- `admin@formulas.test` / `password123` (administrativo)
+- `despachador@formulas.test` / `password123` (despachador)
+- `cliente@formulas.test` / `password123` (cliente)
 
-## License
+## Rutas web
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- `GET /login`
+- `GET /register`
+- `GET /dashboard` (requiere auth)
+- Modulos protegidos por middleware `rol`.
+
+## Rutas API (prefijo `/api`)
+
+Publicas:
+
+- `POST /api/register`
+- `POST /api/login`
+
+Protegidas JWT (`Authorization: Bearer <token>`):
+
+- `POST /api/logout`
+- `GET /api/me`
+- `GET /api/formulas-medicas`
+- `POST /api/formulas-medicas`
+- `GET /api/formulas-medicas/{id}`
+- `PUT/PATCH /api/formulas-medicas/{id}`
+- `DELETE /api/formulas-medicas/{id}`
+
+## Pruebas con Postman
+
+1. Ejecutar `POST /api/login` y copiar `access_token`.
+2. Configurar Bearer Token en la coleccion.
+3. Probar CRUD de `formulas-medicas`.
+4. Verificar codigos HTTP: `200`, `201`, `204`, `401`, `403`, `422`.
+
+
+
+GATES AND POLICY
+Policy formal para Fórmulas Médicas
+Creé la policy con reglas por rol y propiedad del registro:
+viewAny: cliente, despachador, administrativo
+view/update/delete: dueño o despachador o administrativo
+create: cliente o administrativo
+createForPaciente: administrativo o dueño del paciente
+Archivo: FormulaMedicaPolicy.php
+Registro de Policy + Gates del sistema
+Registré la policy en el provider.
+Definí Gates para acceso modular:
+acceso-dashboard
+acceso-pacientes
+acceso-formulas
+acceso-medicamentos
+acceso-inventarios
+acceso-entregas
+acceso-citas
+
+
+Datos para iniciar sesión y validar por actor:
+
+Administrativo
+Correo: admin@formulas.test
+Contraseña: password123
+Despachador de medicamentos
+Correo: despachador@formulas.test
+Contraseña: password123
+Cliente
+Correo: cliente@formulas.test
+Contraseña: password123
+
+
+
+
+
+Sí, ese flujo es totalmente viable y es justo como operan muchos dispensarios digitales.
+Para que funcione bien, lo clave es manejarlo como un proceso con estados y eventos auditables.
+
+Trazabilidad Recomendada (Cliente Web)
+
+Radicación de solicitud
+Validación documental
+Validación clínica/administrativa
+Validación de cobertura/autorización EPS
+Reserva de inventario
+Agendamiento de cita de entrega
+Preparación del pedido
+Entrega (total o parcial)
+Cierre y encuesta
+Flujo Operativo
+
+
+Estados Que Debes Tener
+
+Solicitud: radicada, e
+
+Reglas de Negocio Clave
+
+El cliente sí puede crear cita, pero solo después de que la solicitud esté aprobada o parcial.
+Se permite subir PDF/JPG/PNG con validaciones:
+tamaño máximo (ej. 10MB),
+escaneo antivirus,
+integridad del archivo.
+Una fórmula vencida pasa a vencida automáticamente.
+Si no hay stock total, habilitar entrega parcial y crear saldo pendiente.
+Citas con recordatorio automático (24h y 2h antes).
+Si hay no_asistio, permitir reprogramación limitada (ej. 2 intentos).
+Qué Registrar Para Trazabilidad Real
+
+quien (usuario/rol).
+que (evento).
+cuando (timestamp).
+desde/hacia (cambio de estado).
+evidencia (archivo, comentario, motivo rechazo, observación clínica).
+canal (web, callcenter, presencial).
+Eventos Mínimos (Bitácora)
+
+Eventos Mínimos (Bitácora)
+
+solicitud_creada
+formula_adjunta
+documento_validado / documento_rechazado
+eps_aprobada / eps_rechazada
+inventario_reservado
+cita_propuesta
+cita_confirmada / cita_reprogramada
+pedido_preparado
+entrega_parcial / entrega_total
+caso_cerrado
+KPIs para Control del Proceso
+
+Tiempo promedio desde radicación hasta aprobación.
+Tiempo promedio desde aprobación hasta entrega.
+% de entregas parciales.
+% no-asistencia a cita.
+% solicitudes rechazadas por calidad documental.
+Nivel de cumplimiento SLA (ej. < 72h).
+SLA Sugerido
+
+Revisión documental: <= 8 horas hábiles.
+Validación de cobertura: <= 24 horas.
+Propuesta de cita: <= 24 horas después de aprobación.
+Entrega: <= 48 horas después de cita confirmada (según disponibilidad).
+Estructura Técnica Recomendada (en tu proyecto)
+
+Tabla solicitudes_formula (cabecera del proceso).
+Tabla solicitud_adjuntos (PDF/fotos + metadatos).
+Tabla solicitud_eventos (bitácora inmutable de trazabilidad).
+Relación con citas, entregas, inventario, pacientes, usuarios.
+Notificaciones por correo/WhatsApp para cada transición crítica.
+Si quieres, en el siguiente paso te propongo el diseño exacto de tablas + estados + transiciones listo para migraciones Laravel y políticas por rol (cliente, despachador, admin).
