@@ -24,6 +24,10 @@ class OtpVerificationController extends Controller
             return redirect()->route('login');
         }
 
+        if ($this->otpExpired($user)) {
+            return $this->redirectToLoginAfterExpiredOtp($request, $user);
+        }
+
         return view('auth.otp-verify', ['email' => $user->email]);
     }
 
@@ -39,9 +43,13 @@ class OtpVerificationController extends Controller
             return redirect()->route('login');
         }
 
+        if ($this->otpExpired($user)) {
+            return $this->redirectToLoginAfterExpiredOtp($request, $user);
+        }
+
         if (! $user->verifyOtp($request->string('code')->toString())) {
             return back()->withErrors([
-                'code' => 'El codigo ingresado no es valido o ha expirado.',
+                'code' => 'El codigo ingresado no es valido.',
             ]);
         }
 
@@ -73,7 +81,7 @@ class OtpVerificationController extends Controller
                 'otp' => $otp,
                 'user' => $user,
             ])->render(),
-            "Tu nuevo codigo de verificacion es: {$otp}. Este codigo es valido por 5 minutos."
+            "Tu nuevo codigo de verificacion es: {$otp}. Este codigo es valido por 2 minutos."
         );
 
         return back()->with('status', 'Se ha enviado un nuevo codigo a tu correo.');
@@ -88,5 +96,20 @@ class OtpVerificationController extends Controller
         }
 
         return User::find((int) $userId);
+    }
+
+    private function otpExpired(User $user): bool
+    {
+        return $user->otp_expires_at !== null && now()->gt($user->otp_expires_at);
+    }
+
+    private function redirectToLoginAfterExpiredOtp(Request $request, User $user): RedirectResponse
+    {
+        $user->clearOtp();
+        $request->session()->forget(['otp_user_id', 'otp_remember']);
+
+        return redirect()->route('login')->withErrors([
+            'email' => 'El codigo OTP expiro. Inicia sesion nuevamente.',
+        ]);
     }
 }

@@ -66,7 +66,7 @@ class AuthenticatedSessionController extends Controller
                 'otp' => $otp,
                 'user' => $authUser,
             ])->render(),
-            "Tu codigo de verificacion es: {$otp}. Este codigo es valido por 5 minutos."
+            "Tu codigo de verificacion es: {$otp}. Este codigo es valido por 2 minutos."
         );
 
         Auth::logout();
