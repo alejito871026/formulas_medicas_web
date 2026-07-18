@@ -12,6 +12,7 @@ use Illuminate\Validation\Rule;
 class EntregaController extends Controller
 {
     private const ESTADOS = ['pendiente', 'parcial', 'entregada', 'completa', 'atendida', 'cancelada'];
+    private const PDF_MAX_ROWS = 120;
 
     public function index(Request $request)
     {
@@ -57,7 +58,14 @@ class EntregaController extends Controller
         $busquedaAplicada = mb_strlen($busqueda) > 5 ? $busqueda : '';
 
         $query = Entrega::query()
-            ->with(['formulaItem.formulaMedica.paciente', 'formulaItem.medicamento', 'user'])
+            ->select(['id', 'formula_medicamento_id', 'user_id', 'fecha_entrega', 'fecha_estimada', 'cantidad_entregada', 'estado_entrega'])
+            ->with([
+                'formulaItem:id,formula_medica_id,medicamento_id',
+                'formulaItem.formulaMedica:id,numero_formula,paciente_id',
+                'formulaItem.formulaMedica.paciente:id,nombres,apellidos',
+                'formulaItem.medicamento:id,nombre',
+                'user:id,name',
+            ])
             ->orderByDesc('id');
 
         if ($estado !== 'todos') {
@@ -77,10 +85,12 @@ class EntregaController extends Controller
             });
         }
 
-        $entregas = $query->get();
+        $totalEntregas = (clone $query)->count();
+        $entregas = $query->limit(self::PDF_MAX_ROWS)->get();
 
         $pdf = app('dompdf.wrapper')->loadView('pdf.entregas', [
             'entregas' => $entregas,
+            'totalEntregas' => $totalEntregas,
             'estado' => $estado,
             'busqueda' => $busqueda,
             'usuario' => $request->user(),

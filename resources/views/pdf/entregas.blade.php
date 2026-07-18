@@ -25,6 +25,11 @@
             Filtros - Estado: {{ $estado === 'todos' ? 'Todos' : ucfirst(str_replace('_', ' ', $estado)) }} |
             Busqueda: {{ trim((string) $busqueda) !== '' ? $busqueda : 'Sin busqueda' }}
         </div>
+        @if (($totalEntregas ?? 0) > $entregas->count())
+            <div class="filters">
+                Exportacion parcial: se muestran {{ $entregas->count() }} de {{ $totalEntregas }} entregas para evitar tiempos de espera excesivos.
+            </div>
+        @endif
     </div>
 
     <table>

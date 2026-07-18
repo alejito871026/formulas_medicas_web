@@ -13,6 +13,7 @@ use Illuminate\Validation\Rule;
 class CitaController extends Controller
 {
     private const ESTADOS = ['programada', 'confirmada', 'reprogramada', 'cancelada', 'atendida', 'no_asistio'];
+    private const PDF_MAX_ROWS = 120;
 
     public function index(Request $request)
     {
@@ -92,7 +93,12 @@ class CitaController extends Controller
         $busquedaAplicada = mb_strlen($busqueda) > 5 ? $busqueda : '';
 
         $query = Cita::query()
-            ->with(['paciente.user', 'formulaMedica'])
+            ->select(['id', 'paciente_id', 'formula_medica_id', 'fecha_cita', 'hora_cita', 'motivo', 'estado', 'observaciones'])
+            ->with([
+                'paciente:id,nombres,apellidos,numero_documento,user_id',
+                'paciente.user:id,name',
+                'formulaMedica:id,numero_formula',
+            ])
             ->orderByDesc('fecha_cita')
             ->orderByDesc('hora_cita');
 
@@ -121,10 +127,12 @@ class CitaController extends Controller
             });
         }
 
-        $citas = $query->get();
+        $totalCitas = (clone $query)->count();
+        $citas = $query->limit(self::PDF_MAX_ROWS)->get();
 
         $pdf = app('dompdf.wrapper')->loadView('pdf.citas', [
             'citas' => $citas,
+            'totalCitas' => $totalCitas,
             'estado' => $estado,
             'motivo' => $motivo,
             'busqueda' => $busqueda,

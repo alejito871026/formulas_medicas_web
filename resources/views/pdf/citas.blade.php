@@ -26,6 +26,11 @@
             Motivo: {{ $motivo === 'todos' ? 'Todos' : ucfirst($motivo) }} |
             Busqueda: {{ trim((string) $busqueda) !== '' ? $busqueda : 'Sin busqueda' }}
         </div>
+        @if (($totalCitas ?? 0) > $citas->count())
+            <div class="filters">
+                Exportacion parcial: se muestran {{ $citas->count() }} de {{ $totalCitas }} citas para evitar tiempos de espera excesivos.
+            </div>
+        @endif
     </div>
 
     <table>
