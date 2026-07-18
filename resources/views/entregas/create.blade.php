@@ -44,7 +44,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Cantidad entregada</label>
-                        <input type="number" name="cantidad_entregada" value="{{ old('cantidad_entregada', 1) }}" min="1" required class="input-control w-full">
+                        <input type="number" name="cantidad_entregada" value="{{ old('cantidad_entregada', 1) }}" min="1" max="10000" step="1" required class="input-control w-full">
                     </div>
 
                     <div>
@@ -63,7 +63,7 @@
 
                     <div class="entity-form-span-2">
                         <label class="mb-1 block text-sm font-medium text-slate-700">Observaciones</label>
-                        <textarea name="observaciones" rows="3" class="input-control w-full">{{ old('observaciones') }}</textarea>
+                        <textarea name="observaciones" rows="3" maxlength="255" class="input-control w-full">{{ old('observaciones') }}</textarea>
                     </div>
 
                     <div class="entity-form-actions entity-form-span-2">

@@ -61,7 +61,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Motivo</label>
-                        <input type="text" name="motivo" value="{{ old('motivo', $cita->motivo) }}" required class="input-control w-full" maxlength="80">
+                        <input type="text" name="motivo" value="{{ old('motivo', $cita->motivo) }}" required maxlength="80" class="input-control w-full">
                     </div>
 
                     <div>
@@ -75,7 +75,7 @@
 
                     <div class="entity-form-span-2">
                         <label class="mb-1 block text-sm font-medium text-slate-700">Observaciones</label>
-                        <textarea name="observaciones" rows="3" class="input-control w-full">{{ old('observaciones', $cita->observaciones) }}</textarea>
+                        <textarea name="observaciones" rows="3" maxlength="255" class="input-control w-full">{{ old('observaciones', $cita->observaciones) }}</textarea>
                     </div>
 
                     <div class="entity-form-actions entity-form-span-2">

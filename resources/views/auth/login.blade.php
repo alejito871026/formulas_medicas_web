@@ -59,7 +59,7 @@
 
                             <div>
                                 <label class="mb-2 block text-sm font-medium text-slate-200" for="email">Correo</label>
-                                <input id="email" name="email" type="email" value="{{ old('email') }}" required autocomplete="email"
+                                <input id="email" name="email" type="email" value="{{ old('email') }}" required autocomplete="email" maxlength="120"
                                     class="w-full rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 @error('email') border-red-400 focus:border-red-400 focus:ring-red-400/20 @enderror"
                                     placeholder="usuario@formulas.test">
                                 @error('email')
@@ -69,7 +69,7 @@
 
                             <div>
                                 <label class="mb-2 block text-sm font-medium text-slate-200" for="password">Contrasena</label>
-                                <input id="password" name="password" type="password" required autocomplete="current-password"
+                                <input id="password" name="password" type="password" required autocomplete="current-password" minlength="8"
                                     class="w-full rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 @error('password') border-red-400 focus:border-red-400 focus:ring-red-400/20 @enderror"
                                     placeholder="••••••••">
                                 @error('password')

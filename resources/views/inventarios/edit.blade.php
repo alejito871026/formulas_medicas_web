@@ -40,17 +40,17 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Lote</label>
-                        <input type="text" name="lote" value="{{ old('lote', $inventario->lote) }}" required class="input-control w-full">
+                        <input type="text" name="lote" value="{{ old('lote', $inventario->lote) }}" required maxlength="40" class="input-control w-full">
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Stock actual</label>
-                        <input type="number" name="stock_actual" value="{{ old('stock_actual', $inventario->stock_actual) }}" min="0" required class="input-control w-full">
+                        <input type="number" name="stock_actual" value="{{ old('stock_actual', $inventario->stock_actual) }}" min="0" step="1" required class="input-control w-full">
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Stock minimo</label>
-                        <input type="number" name="stock_minimo" value="{{ old('stock_minimo', $inventario->stock_minimo) }}" min="0" required class="input-control w-full">
+                        <input type="number" name="stock_minimo" value="{{ old('stock_minimo', $inventario->stock_minimo) }}" min="0" step="1" required class="input-control w-full">
                     </div>
 
                     <div>
@@ -60,7 +60,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Ubicacion</label>
-                        <input type="text" name="ubicacion" value="{{ old('ubicacion', $inventario->ubicacion) }}" class="input-control w-full">
+                        <input type="text" name="ubicacion" value="{{ old('ubicacion', $inventario->ubicacion) }}" maxlength="80" class="input-control w-full">
                     </div>
 
                     <div class="entity-form-actions entity-form-span-2">

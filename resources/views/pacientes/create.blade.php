@@ -27,22 +27,22 @@
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Nombre de usuario</label>
-                <input type="text" name="name" value="{{ old('name') }}" required class="input-control w-full">
+                <input type="text" name="name" value="{{ old('name') }}" required minlength="3" maxlength="120" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Correo de acceso</label>
-                <input type="email" name="email" value="{{ old('email') }}" required class="input-control w-full">
+                <input type="email" name="email" value="{{ old('email') }}" required maxlength="120" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Contrasena</label>
-                <input type="password" name="password" required class="input-control w-full">
+                <input type="password" name="password" required minlength="8" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Confirmar contrasena</label>
-                <input type="password" name="password_confirmation" required class="input-control w-full">
+                <input type="password" name="password_confirmation" required minlength="8" class="input-control w-full">
             </div>
 
             <div>
@@ -56,17 +56,17 @@
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Numero documento</label>
-                <input type="text" name="numero_documento" value="{{ old('numero_documento') }}" required class="input-control w-full">
+                <input type="text" name="numero_documento" value="{{ old('numero_documento') }}" required maxlength="20" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Nombres</label>
-                <input type="text" name="nombres" value="{{ old('nombres') }}" required class="input-control w-full">
+                <input type="text" name="nombres" value="{{ old('nombres') }}" required minlength="2" maxlength="80" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Apellidos</label>
-                <input type="text" name="apellidos" value="{{ old('apellidos') }}" required class="input-control w-full">
+                <input type="text" name="apellidos" value="{{ old('apellidos') }}" required minlength="2" maxlength="80" class="input-control w-full">
             </div>
 
             <div>
@@ -76,12 +76,12 @@
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Telefono</label>
-                <input type="text" name="telefono" value="{{ old('telefono') }}" class="input-control w-full">
+                <input type="tel" name="telefono" value="{{ old('telefono') }}" maxlength="20" inputmode="numeric" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Correo de contacto paciente</label>
-                <input type="email" name="email_contacto" value="{{ old('email_contacto') }}" class="input-control w-full">
+                <input type="email" name="email_contacto" value="{{ old('email_contacto') }}" maxlength="120" class="input-control w-full">
             </div>
 
             <div>
@@ -97,7 +97,7 @@
 
             <div class="entity-form-span-2">
                 <label class="mb-1 block text-sm font-medium text-slate-700">Direccion</label>
-                <input type="text" name="direccion" value="{{ old('direccion') }}" class="input-control w-full">
+                <input type="text" name="direccion" value="{{ old('direccion') }}" maxlength="150" class="input-control w-full">
             </div>
 
             <div>

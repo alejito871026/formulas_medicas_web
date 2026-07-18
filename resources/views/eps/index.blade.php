@@ -26,7 +26,7 @@
                     @csrf
                     <div class="field-group">
                         <label class="text-sm font-medium text-slate-700">Nombre EPS</label>
-                        <input type="text" name="nombre" value="{{ old('nombre') }}" required class="input-control w-full">
+                        <input type="text" name="nombre" value="{{ old('nombre') }}" required minlength="3" maxlength="120" class="input-control w-full">
                         @error('nombre')
                             <p class="text-xs text-rose-600">{{ $message }}</p>
                         @enderror
@@ -34,7 +34,7 @@
 
                     <div class="field-group">
                         <label class="text-sm font-medium text-slate-700">Telefono de contacto</label>
-                        <input type="text" name="telefono" value="{{ old('telefono') }}" required class="input-control w-full" placeholder="Ej: 6013077022">
+                        <input type="tel" name="telefono" value="{{ old('telefono') }}" required maxlength="30" inputmode="numeric" class="input-control w-full" placeholder="Ej: 6013077022">
                         @error('telefono')
                             <p class="text-xs text-rose-600">{{ $message }}</p>
                         @enderror
@@ -42,7 +42,7 @@
 
                     <div class="field-group">
                         <label class="text-sm font-medium text-slate-700">Direccion principal</label>
-                        <input type="text" name="direccion" value="{{ old('direccion') }}" required class="input-control w-full" placeholder="Ej: Calle 26 # 69-76, Bogota">
+                        <input type="text" name="direccion" value="{{ old('direccion') }}" required maxlength="150" class="input-control w-full" placeholder="Ej: Calle 26 # 69-76, Bogota">
                         @error('direccion')
                             <p class="text-xs text-rose-600">{{ $message }}</p>
                         @enderror
@@ -50,7 +50,7 @@
 
                     <div class="field-group">
                         <label class="text-sm font-medium text-slate-700">Nombre del contacto</label>
-                        <input type="text" name="nombre_contacto" value="{{ old('nombre_contacto') }}" required class="input-control w-full" placeholder="Ej: Mesa de Servicio Nueva EPS">
+                        <input type="text" name="nombre_contacto" value="{{ old('nombre_contacto') }}" required minlength="3" maxlength="120" class="input-control w-full" placeholder="Ej: Mesa de Servicio Nueva EPS">
                         @error('nombre_contacto')
                             <p class="text-xs text-rose-600">{{ $message }}</p>
                         @enderror

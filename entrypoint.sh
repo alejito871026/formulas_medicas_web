@@ -38,15 +38,7 @@ php-fpm -D
     if [ "$RUN_DEMO_SEEDERS_NORMALIZED" = "true" ] || [ "$RUN_DEMO_SEEDERS_NORMALIZED" = "1" ] || [ "$RUN_DEMO_SEEDERS_NORMALIZED" = "yes" ]; then
         echo "RUN_DEMO_SEEDERS=${RUN_DEMO_SEEDERS:-false}: ejecutando DatabaseSeeder..." | tee -a /var/www/html/storage/logs/bootstrap-db.log
         php artisan db:seed --class=DatabaseSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
-
-        echo "Forzando seeders clave para dashboard (formulas, citas, entregas)..." | tee -a /var/www/html/storage/logs/bootstrap-db.log
-        php artisan db:seed --class=FormulaMedicaSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
-        php artisan db:seed --class=FormulaMedicaItemSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
-        php artisan db:seed --class=CitaSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
-        php artisan db:seed --class=EntregaSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
-        php artisan db:seed --class=BackfillLastSixMonthsSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
-
-        echo "$(date '+%Y-%m-%d %H:%M:%S') DatabaseSeeder finalizado" | tee -a /var/www/html/storage/logs/demo-seeder.log
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] DatabaseSeeder finalizado" | tee -a /var/www/html/storage/logs/bootstrap-db.log
     else
         echo "RUN_DEMO_SEEDERS=${RUN_DEMO_SEEDERS:-false}: desactivado, se omite DatabaseSeeder." | tee -a /var/www/html/storage/logs/bootstrap-db.log
     fi

@@ -39,7 +39,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Numero de formula</label>
-                        <input type="text" name="numero_formula" value="{{ old('numero_formula', $formula->numero_formula) }}" required class="input-control w-full">
+                        <input type="text" name="numero_formula" value="{{ old('numero_formula', $formula->numero_formula) }}" required maxlength="40" class="input-control w-full">
                     </div>
 
                     <div>
@@ -54,7 +54,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Medico tratante</label>
-                        <input type="text" name="medico_tratante" value="{{ old('medico_tratante', $formula->medico_tratante) }}" class="input-control w-full">
+                        <input type="text" name="medico_tratante" value="{{ old('medico_tratante', $formula->medico_tratante) }}" maxlength="120" class="input-control w-full">
                     </div>
 
                     <div>
@@ -68,7 +68,7 @@
 
                     <div class="entity-form-span-2">
                         <label class="mb-1 block text-sm font-medium text-slate-700">Observaciones</label>
-                        <textarea name="observaciones" rows="3" class="input-control w-full">{{ old('observaciones', $formula->observaciones) }}</textarea>
+                        <textarea name="observaciones" rows="3" maxlength="255" class="input-control w-full">{{ old('observaciones', $formula->observaciones) }}</textarea>
                     </div>
 
                     <div class="entity-form-actions entity-form-span-2">

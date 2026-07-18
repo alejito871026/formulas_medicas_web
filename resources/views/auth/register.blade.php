@@ -17,7 +17,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium" for="name">Nombre</label>
-                        <input id="name" name="name" type="text" value="{{ old('name') }}" required class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('name') border-red-500 @enderror">
+                        <input id="name" name="name" type="text" value="{{ old('name') }}" required minlength="3" maxlength="255" class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('name') border-red-500 @enderror">
                         @error('name')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -25,7 +25,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium" for="email">Correo</label>
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" required class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('email') border-red-500 @enderror">
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" required maxlength="255" class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('email') border-red-500 @enderror">
                         @error('email')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -46,7 +46,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium" for="telefono">Telefono</label>
-                        <input id="telefono" name="telefono" type="text" value="{{ old('telefono') }}" class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('telefono') border-red-500 @enderror">
+                        <input id="telefono" name="telefono" type="tel" value="{{ old('telefono') }}" maxlength="20" inputmode="numeric" class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('telefono') border-red-500 @enderror">
                         @error('telefono')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -54,7 +54,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium" for="direccion">Direccion</label>
-                        <textarea id="direccion" name="direccion" rows="3" class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('direccion') border-red-500 @enderror">{{ old('direccion') }}</textarea>
+                        <textarea id="direccion" name="direccion" rows="3" maxlength="255" class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('direccion') border-red-500 @enderror">{{ old('direccion') }}</textarea>
                         @error('direccion')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -71,7 +71,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium" for="password">Contrasena</label>
-                        <input id="password" name="password" type="password" required class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('password') border-red-500 @enderror">
+                        <input id="password" name="password" type="password" required minlength="8" class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('password') border-red-500 @enderror">
                         @error('password')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -79,7 +79,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium" for="password_confirmation">Confirmar contrasena</label>
-                        <input id="password_confirmation" name="password_confirmation" type="password" required class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm">
+                        <input id="password_confirmation" name="password_confirmation" type="password" required minlength="8" class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm">
                     </div>
 
                     <button type="submit" class="w-full rounded-xl bg-teal-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-teal-800">Registrarme</button>

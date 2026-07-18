@@ -27,32 +27,32 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Codigo</label>
-                        <input type="text" name="codigo" value="{{ old('codigo') }}" required class="input-control w-full" placeholder="Ej: MED-00123">
+                        <input type="text" name="codigo" value="{{ old('codigo') }}" required maxlength="30" class="input-control w-full" placeholder="Ej: MED-00123">
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Nombre</label>
-                        <input type="text" name="nombre" value="{{ old('nombre') }}" required class="input-control w-full" placeholder="Ej: Acetaminofen">
+                        <input type="text" name="nombre" value="{{ old('nombre') }}" required minlength="3" maxlength="120" class="input-control w-full" placeholder="Ej: Acetaminofen">
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Principio activo</label>
-                        <input type="text" name="principio_activo" value="{{ old('principio_activo') }}" class="input-control w-full" placeholder="Ej: Paracetamol">
+                        <input type="text" name="principio_activo" value="{{ old('principio_activo') }}" maxlength="120" class="input-control w-full" placeholder="Ej: Paracetamol">
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Presentacion</label>
-                        <input type="text" name="presentacion" value="{{ old('presentacion') }}" required class="input-control w-full" placeholder="Ej: Tableta">
+                        <input type="text" name="presentacion" value="{{ old('presentacion') }}" required maxlength="80" class="input-control w-full" placeholder="Ej: Tableta">
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Concentracion</label>
-                        <input type="text" name="concentracion" value="{{ old('concentracion') }}" class="input-control w-full" placeholder="Ej: 500 mg">
+                        <input type="text" name="concentracion" value="{{ old('concentracion') }}" maxlength="60" class="input-control w-full" placeholder="Ej: 500 mg">
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Unidad de medida</label>
-                        <input type="text" name="unidad_medida" value="{{ old('unidad_medida') }}" class="input-control w-full" placeholder="Ej: mg, ml, UI">
+                        <input type="text" name="unidad_medida" value="{{ old('unidad_medida') }}" maxlength="30" class="input-control w-full" placeholder="Ej: mg, ml, UI">
                     </div>
 
                     <div>

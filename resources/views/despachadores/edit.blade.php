@@ -37,22 +37,22 @@
 
                 <div>
                     <label class="mb-1 block text-sm font-medium text-slate-700">Nombre completo</label>
-                    <input type="text" name="name" value="{{ old('name', $despachador->name) }}" required class="input-control w-full">
+                    <input type="text" name="name" value="{{ old('name', $despachador->name) }}" required minlength="3" maxlength="120" class="input-control w-full">
                 </div>
 
                 <div>
                     <label class="mb-1 block text-sm font-medium text-slate-700">Correo</label>
-                    <input type="email" name="email" value="{{ old('email', $despachador->email) }}" required class="input-control w-full">
+                    <input type="email" name="email" value="{{ old('email', $despachador->email) }}" required maxlength="120" class="input-control w-full">
                 </div>
 
                 <div>
                     <label class="mb-1 block text-sm font-medium text-slate-700">Nueva contrasena (opcional)</label>
-                    <input type="password" name="password" class="input-control w-full">
+                    <input type="password" name="password" minlength="8" class="input-control w-full">
                 </div>
 
                 <div>
                     <label class="mb-1 block text-sm font-medium text-slate-700">Confirmar nueva contrasena</label>
-                    <input type="password" name="password_confirmation" class="input-control w-full">
+                    <input type="password" name="password_confirmation" minlength="8" class="input-control w-full">
                 </div>
 
                 <div class="entity-form-actions md:col-span-2">

@@ -37,22 +37,22 @@
 
                 <div class="field-group">
                     <label class="text-sm font-medium text-slate-700">Nombre EPS</label>
-                    <input type="text" name="nombre" value="{{ old('nombre', $ep->nombre) }}" required class="input-control w-full">
+                    <input type="text" name="nombre" value="{{ old('nombre', $ep->nombre) }}" required minlength="3" maxlength="120" class="input-control w-full">
                 </div>
 
                 <div class="field-group">
                     <label class="text-sm font-medium text-slate-700">Telefono de contacto</label>
-                    <input type="text" name="telefono" value="{{ old('telefono', $ep->telefono) }}" required class="input-control w-full">
+                    <input type="tel" name="telefono" value="{{ old('telefono', $ep->telefono) }}" required maxlength="30" inputmode="numeric" class="input-control w-full">
                 </div>
 
                 <div class="field-group md:col-span-2">
                     <label class="text-sm font-medium text-slate-700">Direccion principal</label>
-                    <input type="text" name="direccion" value="{{ old('direccion', $ep->direccion) }}" required class="input-control w-full">
+                    <input type="text" name="direccion" value="{{ old('direccion', $ep->direccion) }}" required maxlength="150" class="input-control w-full">
                 </div>
 
                 <div class="field-group md:col-span-2">
                     <label class="text-sm font-medium text-slate-700">Nombre del contacto</label>
-                    <input type="text" name="nombre_contacto" value="{{ old('nombre_contacto', $ep->nombre_contacto) }}" required class="input-control w-full">
+                    <input type="text" name="nombre_contacto" value="{{ old('nombre_contacto', $ep->nombre_contacto) }}" required minlength="3" maxlength="120" class="input-control w-full">
                 </div>
 
                 <div class="entity-form-actions md:col-span-2">

@@ -39,7 +39,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Numero de formula</label>
-                        <input type="text" name="numero_formula" value="{{ old('numero_formula') }}" required class="input-control w-full" placeholder="Ej: FM-2026-0001">
+                            <input type="text" name="numero_formula" value="{{ old('numero_formula') }}" required maxlength="40" class="input-control w-full" placeholder="Ej: FM-2026-0001">
                     </div>
 
                     <div>
@@ -47,17 +47,17 @@
                         <input type="date" name="fecha_formula" value="{{ old('fecha_formula') }}" required class="input-control w-full">
                     </div>
 
-                    <div>
+                            <textarea name="diagnostico" rows="3" required maxlength="120" class="input-control w-full" placeholder="Diagnostico principal o CIE10">{{ old('diagnostico') }}</textarea>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Fecha de vencimiento</label>
                         <input type="date" name="fecha_vencimiento" value="{{ old('fecha_vencimiento') }}" class="input-control w-full">
                     </div>
 
-                    <div>
+                                    <input type="number" name="items[0][cantidad_formulada]" min="1" max="10000" step="1" value="1" required class="input-control w-full">
                         <label class="mb-1 block text-sm font-medium text-slate-700">Medico tratante</label>
-                        <input type="text" name="medico_tratante" value="{{ old('medico_tratante') }}" class="input-control w-full" placeholder="Ej: Dra. Laura Rios">
+                        <input type="text" name="medico_tratante" value="{{ old('medico_tratante') }}" maxlength="120" class="input-control w-full" placeholder="Ej: Dra. Laura Rios">
                     </div>
 
-                    <div>
+                                    <input type="number" name="items[0][dias_tratamiento]" min="1" max="365" step="1" value="30" required class="input-control w-full">
                         <label class="mb-1 block text-sm font-medium text-slate-700">Estado</label>
                         <select name="estado" required class="select-control w-full">
                             @foreach ($estadosDisponibles as $estado)
@@ -66,9 +66,9 @@
                         </select>
                     </div>
 
-                    <div class="entity-form-span-2">
+                                    <textarea name="items[0][indicaciones]" rows="2" maxlength="255" class="input-control w-full" placeholder="Tomar 1 tableta cada 8 horas"></textarea>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Observaciones</label>
-                        <textarea name="observaciones" rows="3" class="input-control w-full">{{ old('observaciones') }}</textarea>
+                        <textarea name="observaciones" rows="3" maxlength="255" class="input-control w-full">{{ old('observaciones') }}</textarea>
                     </div>
 
                     <div class="entity-form-actions entity-form-span-2">

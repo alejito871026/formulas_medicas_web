@@ -28,22 +28,22 @@
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Nombre de usuario</label>
-                <input type="text" name="name" value="{{ old('name', $paciente->user?->name) }}" required class="input-control w-full">
+                <input type="text" name="name" value="{{ old('name', $paciente->user?->name) }}" required minlength="3" maxlength="120" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Correo de acceso</label>
-                <input type="email" name="email" value="{{ old('email', $paciente->user?->email) }}" required class="input-control w-full">
+                <input type="email" name="email" value="{{ old('email', $paciente->user?->email) }}" required maxlength="120" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Nueva contrasena (opcional)</label>
-                <input type="password" name="password" class="input-control w-full">
+                <input type="password" name="password" minlength="8" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Confirmar nueva contrasena</label>
-                <input type="password" name="password_confirmation" class="input-control w-full">
+                <input type="password" name="password_confirmation" minlength="8" class="input-control w-full">
             </div>
 
             <div>
@@ -57,17 +57,17 @@
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Numero documento</label>
-                <input type="text" name="numero_documento" value="{{ old('numero_documento', $paciente->numero_documento) }}" required class="input-control w-full">
+                <input type="text" name="numero_documento" value="{{ old('numero_documento', $paciente->numero_documento) }}" required maxlength="20" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Nombres</label>
-                <input type="text" name="nombres" value="{{ old('nombres', $paciente->nombres) }}" required class="input-control w-full">
+                <input type="text" name="nombres" value="{{ old('nombres', $paciente->nombres) }}" required minlength="2" maxlength="80" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Apellidos</label>
-                <input type="text" name="apellidos" value="{{ old('apellidos', $paciente->apellidos) }}" required class="input-control w-full">
+                <input type="text" name="apellidos" value="{{ old('apellidos', $paciente->apellidos) }}" required minlength="2" maxlength="80" class="input-control w-full">
             </div>
 
             <div>
@@ -77,12 +77,12 @@
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Telefono</label>
-                <input type="text" name="telefono" value="{{ old('telefono', $paciente->telefono) }}" class="input-control w-full">
+                <input type="tel" name="telefono" value="{{ old('telefono', $paciente->telefono) }}" maxlength="20" inputmode="numeric" class="input-control w-full">
             </div>
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Correo de contacto paciente</label>
-                <input type="email" name="email_contacto" value="{{ old('email_contacto', $paciente->email) }}" class="input-control w-full">
+                <input type="email" name="email_contacto" value="{{ old('email_contacto', $paciente->email) }}" maxlength="120" class="input-control w-full">
             </div>
 
             <div>
@@ -98,7 +98,7 @@
 
             <div class="entity-form-span-2">
                 <label class="mb-1 block text-sm font-medium text-slate-700">Direccion</label>
-                <input type="text" name="direccion" value="{{ old('direccion', $paciente->direccion) }}" class="input-control w-full">
+                <input type="text" name="direccion" value="{{ old('direccion', $paciente->direccion) }}" maxlength="150" class="input-control w-full">
             </div>
 
             <div>

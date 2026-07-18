@@ -18,9 +18,11 @@ class FormulaMedicaItemSeeder extends Seeder
             return;
         }
 
+        $medicamentosArray = $medicamentos->all();
+
         foreach ($formulas as $formula) {
             $cantidadItems = random_int(1, 4);
-            $indices = array_rand($medicamentos->all(), $cantidadItems);
+            $indices = array_rand($medicamentosArray, $cantidadItems);
             $indices = is_array($indices) ? $indices : [$indices];
 
             foreach ($indices as $index) {

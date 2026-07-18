@@ -39,17 +39,17 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Lote</label>
-                        <input type="text" name="lote" value="{{ old('lote') }}" required class="input-control w-full" placeholder="Ej: LOTE-2026-001">
+                        <input type="text" name="lote" value="{{ old('lote') }}" required maxlength="40" class="input-control w-full" placeholder="Ej: LOTE-2026-001">
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Stock actual</label>
-                        <input type="number" name="stock_actual" value="{{ old('stock_actual', 0) }}" min="0" required class="input-control w-full">
+                        <input type="number" name="stock_actual" value="{{ old('stock_actual', 0) }}" min="0" step="1" required class="input-control w-full">
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Stock minimo</label>
-                        <input type="number" name="stock_minimo" value="{{ old('stock_minimo', 0) }}" min="0" required class="input-control w-full">
+                        <input type="number" name="stock_minimo" value="{{ old('stock_minimo', 0) }}" min="0" step="1" required class="input-control w-full">
                     </div>
 
                     <div>
@@ -59,7 +59,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Ubicacion</label>
-                        <input type="text" name="ubicacion" value="{{ old('ubicacion') }}" class="input-control w-full" placeholder="Ej: Estante B2">
+                        <input type="text" name="ubicacion" value="{{ old('ubicacion') }}" maxlength="80" class="input-control w-full" placeholder="Ej: Estante B2">
                     </div>
 
                     <div class="entity-form-actions entity-form-span-2">

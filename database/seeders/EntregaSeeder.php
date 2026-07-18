@@ -31,6 +31,7 @@ class EntregaSeeder extends Seeder
 
             $cantidadRegistros = random_int(1, min(3, $cantidadObjetivo));
             $restante = $cantidadObjetivo;
+            $totalEntregado = 0;
 
             for ($i = 1; $i <= $cantidadRegistros; $i++) {
                 $cantidadEntrega = $i === $cantidadRegistros ? $restante : random_int(1, max(1, $restante - ($cantidadRegistros - $i)));
@@ -55,9 +56,10 @@ class EntregaSeeder extends Seeder
                         'updated_at' => (clone $fechaEntrega)->addDays(random_int(0, 15))->min(now()),
                     ]
                 );
+
+                $totalEntregado += $cantidadEntrega;
             }
 
-            $totalEntregado = (int) Entrega::query()->where('formula_medicamento_id', $item->id)->sum('cantidad_entregada');
             $item->cantidad_entregada = min($totalEntregado, (int) $item->cantidad_formulada);
             $item->estado_item = $item->cantidad_entregada >= (int) $item->cantidad_formulada ? 'entregada' : 'parcial';
             $item->save();

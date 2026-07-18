@@ -40,7 +40,7 @@ class PacienteSeeder extends Seeder
             'Castro', 'Rojas', 'Morales', 'Mendoza', 'Ruiz', 'Sanchez', 'Velasco', 'Cifuentes', 'Reyes', 'Quintero',
         ];
 
-        $totalPacientes = 180;
+        $totalPacientes = max(40, (int) env('DEMO_PACIENTES_TOTAL', 80));
 
         for ($i = 1; $i <= $totalPacientes; $i++) {
             $nombre = $nombres[($i - 1) % count($nombres)];

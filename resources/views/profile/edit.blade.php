@@ -74,12 +74,12 @@
                         <div class="profile-field-grid">
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-slate-700">Nombre</label>
-                                <input type="text" name="name" value="{{ old('name', $user->name) }}" required class="input-control w-full">
+                                <input type="text" name="name" value="{{ old('name', $user->name) }}" required minlength="3" maxlength="120" class="input-control w-full">
                             </div>
 
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-slate-700">Correo</label>
-                                <input type="email" name="email" value="{{ old('email', $user->email) }}" required class="input-control w-full">
+                                <input type="email" name="email" value="{{ old('email', $user->email) }}" required maxlength="120" class="input-control w-full">
                             </div>
                         </div>
                     </div>
@@ -90,12 +90,12 @@
                         <div class="profile-field-grid">
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-slate-700">Telefono</label>
-                                <input type="text" name="telefono" value="{{ old('telefono', $user->telefono) }}" class="input-control w-full" maxlength="20">
+                                <input type="tel" name="telefono" value="{{ old('telefono', $user->telefono) }}" maxlength="20" inputmode="numeric" class="input-control w-full">
                             </div>
 
                             <div class="profile-data-wide">
                                 <label class="mb-1 block text-sm font-medium text-slate-700">Direccion</label>
-                                <textarea name="direccion" rows="4" class="input-control w-full">{{ old('direccion', $user->direccion) }}</textarea>
+                                <textarea name="direccion" rows="4" maxlength="150" class="input-control w-full">{{ old('direccion', $user->direccion) }}</textarea>
                             </div>
                         </div>
                     </div>

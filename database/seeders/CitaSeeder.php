@@ -20,7 +20,9 @@ class CitaSeeder extends Seeder
         $estados = ['programada', 'confirmada', 'reprogramada', 'cancelada', 'atendida', 'no_asistio'];
         $motivos = ['reclamacion', 'entrega_parcial', 'pendiente_stock', 'seguimiento', 'reprogramacion'];
 
-        for ($i = 1; $i <= 140; $i++) {
+        $totalCitas = max(40, (int) env('DEMO_CITAS_TOTAL', 90));
+
+        for ($i = 1; $i <= $totalCitas; $i++) {
             $paciente = $pacientes[($i - 1) % $pacientes->count()];
             $formula = FormulaMedica::query()
                 ->where('paciente_id', $paciente->id)

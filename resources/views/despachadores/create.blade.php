@@ -36,22 +36,22 @@
 
                 <div>
                     <label class="mb-1 block text-sm font-medium text-slate-700">Nombre completo</label>
-                    <input type="text" name="name" value="{{ old('name') }}" required class="input-control w-full">
+                    <input type="text" name="name" value="{{ old('name') }}" required minlength="3" maxlength="120" class="input-control w-full">
                 </div>
 
                 <div>
                     <label class="mb-1 block text-sm font-medium text-slate-700">Correo</label>
-                    <input type="email" name="email" value="{{ old('email') }}" required class="input-control w-full">
+                    <input type="email" name="email" value="{{ old('email') }}" required maxlength="120" class="input-control w-full">
                 </div>
 
                 <div>
                     <label class="mb-1 block text-sm font-medium text-slate-700">Contrasena</label>
-                    <input type="password" name="password" required class="input-control w-full">
+                    <input type="password" name="password" required minlength="8" class="input-control w-full">
                 </div>
 
                 <div>
                     <label class="mb-1 block text-sm font-medium text-slate-700">Confirmar contrasena</label>
-                    <input type="password" name="password_confirmation" required class="input-control w-full">
+                    <input type="password" name="password_confirmation" required minlength="8" class="input-control w-full">
                 </div>
 
                 <div class="entity-form-actions md:col-span-2">
