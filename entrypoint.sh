@@ -32,6 +32,14 @@ php artisan db:seed --class=RoleSeeder --force
 echo "Sembrando usuarios base de despliegue..."
 php artisan db:seed --class=RenderUsersSeeder --force
 
+# Sembrado demo opcional para entornos de exhibicion/seminario
+if [ "$RUN_DEMO_SEEDERS" = "true" ]; then
+    echo "RUN_DEMO_SEEDERS=true: ejecutando DatabaseSeeder (datos demo y ultimos 6 meses)..."
+    php artisan db:seed --class=DatabaseSeeder --force
+else
+    echo "RUN_DEMO_SEEDERS desactivado: se omite DatabaseSeeder."
+fi
+
 # Iniciar PHP-FPM en segundo plano
 php-fpm -D
 
