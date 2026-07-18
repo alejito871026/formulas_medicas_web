@@ -28,6 +28,10 @@ php artisan migrate --force
 echo "Sembrando roles base..."
 php artisan db:seed --class=RoleSeeder --force
 
+# Crear/actualizar usuarios de acceso inicial en Render
+echo "Sembrando usuarios base de despliegue..."
+php artisan db:seed --class=RenderUsersSeeder --force
+
 # Iniciar PHP-FPM en segundo plano
 php-fpm -D
 
