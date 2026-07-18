@@ -20,7 +20,7 @@ class CitaSeeder extends Seeder
         $estados = ['programada', 'confirmada', 'reprogramada', 'cancelada', 'atendida', 'no_asistio'];
         $motivos = ['reclamacion', 'entrega_parcial', 'pendiente_stock', 'seguimiento', 'reprogramacion'];
 
-        $totalCitas = max(40, (int) env('DEMO_CITAS_TOTAL', 90));
+        $totalCitas = max(12, (int) env('DEMO_CITAS_TOTAL', 24));
 
         for ($i = 1; $i <= $totalCitas; $i++) {
             $paciente = $pacientes[($i - 1) % $pacientes->count()];

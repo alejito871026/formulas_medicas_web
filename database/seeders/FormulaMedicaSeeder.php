@@ -18,7 +18,7 @@ class FormulaMedicaSeeder extends Seeder
 
         $estados = ['pendiente', 'en_validacion', 'parcial', 'entregada', 'vencida'];
 
-        $totalFormulas = max(30, (int) env('DEMO_FORMULAS_TOTAL', 70));
+        $totalFormulas = max(12, (int) env('DEMO_FORMULAS_TOTAL', 24));
 
         for ($i = 1; $i <= $totalFormulas; $i++) {
             $paciente = $pacientes[($i - 1) % $pacientes->count()];

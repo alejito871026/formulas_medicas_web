@@ -7,6 +7,7 @@ use App\Models\Paciente;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class PacienteSeeder extends Seeder
 {
@@ -40,7 +41,8 @@ class PacienteSeeder extends Seeder
             'Castro', 'Rojas', 'Morales', 'Mendoza', 'Ruiz', 'Sanchez', 'Velasco', 'Cifuentes', 'Reyes', 'Quintero',
         ];
 
-        $totalPacientes = max(40, (int) env('DEMO_PACIENTES_TOTAL', 80));
+        $totalPacientes = max(8, (int) env('DEMO_PACIENTES_TOTAL', 12));
+        $passwordHash = Hash::make('password123');
 
         for ($i = 1; $i <= $totalPacientes; $i++) {
             $nombre = $nombres[($i - 1) % count($nombres)];
@@ -58,7 +60,7 @@ class PacienteSeeder extends Seeder
                 ['email' => $email],
                 [
                     'name' => $nombre . ' ' . $apellido,
-                    'password' => 'password123',
+                    'password' => $passwordHash,
                     'role_id' => $rolCliente->id,
                     'activo' => true,
                 ]
@@ -88,7 +90,7 @@ class PacienteSeeder extends Seeder
             ['email' => 'cliente@formulas.test'],
             [
                 'name' => 'Cliente Paciente',
-                'password' => 'password123',
+                'password' => $passwordHash,
                 'role_id' => $rolCliente->id,
                 'activo' => true,
             ]
