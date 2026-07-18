@@ -12,14 +12,22 @@ class InventarioSeeder extends Seeder
     {
         $ubicaciones = ['Estante A1', 'Estante A2', 'Estante B1', 'Estante B2', 'Frio C1', 'Frio C2', 'Bodega D1', 'Bodega D2'];
 
-        $medicamentos = Medicamento::query()->orderBy('id')->get();
+        $totalMedicamentos = max(20, (int) env('DEMO_MEDICAMENTOS_CON_INVENTARIO', 60));
+        $lotesMinimos = max(1, (int) env('DEMO_LOTES_POR_MED_MIN', 1));
+        $lotesMaximos = max($lotesMinimos, (int) env('DEMO_LOTES_POR_MED_MAX', 1));
+
+        $medicamentos = Medicamento::query()->orderBy('id')->limit($totalMedicamentos)->get();
+
+        if ($medicamentos->isEmpty()) {
+            return;
+        }
 
         foreach ($medicamentos as $medicamento) {
-            $cantidadLotes = random_int(1, 3);
+            $cantidadLotes = mt_rand($lotesMinimos, $lotesMaximos);
 
             for ($i = 1; $i <= $cantidadLotes; $i++) {
-                $stockMinimo = random_int(15, 80);
-                $stockActual = random_int(0, 350);
+                $stockMinimo = mt_rand(15, 80);
+                $stockActual = mt_rand(0, 350);
 
                 Inventario::query()->updateOrCreate(
                     [
@@ -29,7 +37,7 @@ class InventarioSeeder extends Seeder
                     [
                         'stock_actual' => $stockActual,
                         'stock_minimo' => $stockMinimo,
-                        'fecha_vencimiento' => now()->addDays(random_int(-120, 720))->toDateString(),
+                        'fecha_vencimiento' => now()->addDays(mt_rand(-120, 720))->toDateString(),
                         'ubicacion' => $ubicaciones[array_rand($ubicaciones)],
                     ]
                 );

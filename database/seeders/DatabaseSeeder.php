@@ -16,10 +16,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $seedInventario = filter_var(env('DEMO_SEED_INVENTARIO', true), FILTER_VALIDATE_BOOL);
+
         $this->call(RoleSeeder::class);
         $this->call(EpsSeeder::class);
         $this->call(MedicamentoSeeder::class);
-        $this->call(InventarioSeeder::class);
+        if ($seedInventario) {
+            $this->call(InventarioSeeder::class);
+        }
         $this->call(PacienteSeeder::class);
         $this->call(FormulaMedicaSeeder::class);
         $this->call(FormulaMedicaItemSeeder::class);
