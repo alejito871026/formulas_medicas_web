@@ -28,6 +28,8 @@
 				@if (($estado ?? 'todos') !== 'todos' || ($busqueda ?? '') !== '')
 					<a href="{{ route('entregas.index') }}" class="btn btn-muted">Limpiar</a>
 				@endif
+
+				<a href="{{ route('entregas.export-pdf', request()->query()) }}" class="btn btn-danger">Exportar PDF</a>
 			</form>
 		</div>
 

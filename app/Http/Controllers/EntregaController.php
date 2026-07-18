@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EntregaEstadoActualizado;
 use App\Models\Entrega;
 use App\Models\FormulaMedicaItem;
 use Illuminate\Http\RedirectResponse;
@@ -47,6 +48,45 @@ class EntregaController extends Controller
             'busqueda' => $busqueda,
             'estadosDisponibles' => self::ESTADOS,
         ]);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $estado = $request->query('estado', 'todos');
+        $busqueda = trim((string) $request->query('q', ''));
+        $busquedaAplicada = mb_strlen($busqueda) > 5 ? $busqueda : '';
+
+        $query = Entrega::query()
+            ->with(['formulaItem.formulaMedica.paciente', 'formulaItem.medicamento', 'user'])
+            ->orderByDesc('id');
+
+        if ($estado !== 'todos') {
+            $query->where('estado_entrega', $estado);
+        }
+
+        if ($busquedaAplicada !== '') {
+            $query->where(function ($subQuery) use ($busquedaAplicada): void {
+                $subQuery->where('estado_entrega', 'like', "%{$busquedaAplicada}%")
+                    ->orWhereHas('formulaItem.formulaMedica', fn ($formulaQuery) => $formulaQuery->where('numero_formula', 'like', "%{$busquedaAplicada}%"))
+                    ->orWhereHas('formulaItem.medicamento', fn ($medQuery) => $medQuery->where('nombre', 'like', "%{$busquedaAplicada}%"))
+                    ->orWhereHas('formulaItem.formulaMedica.paciente', function ($pacienteQuery) use ($busquedaAplicada): void {
+                        $pacienteQuery->where('nombres', 'like', "%{$busquedaAplicada}%")
+                            ->orWhere('apellidos', 'like', "%{$busquedaAplicada}%")
+                            ->orWhere('numero_documento', 'like', "%{$busquedaAplicada}%");
+                    });
+            });
+        }
+
+        $entregas = $query->get();
+
+        $pdf = app('dompdf.wrapper')->loadView('pdf.entregas', [
+            'entregas' => $entregas,
+            'estado' => $estado,
+            'busqueda' => $busqueda,
+            'usuario' => $request->user(),
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download('listado-entregas-' . now()->format('Y-m-d') . '.pdf');
     }
 
     public function create()
@@ -107,6 +147,8 @@ class EntregaController extends Controller
 
     public function update(Request $request, Entrega $entrega): RedirectResponse
     {
+        $estadoAnterior = $entrega->estado_entrega;
+
         $validated = $request->validate([
             'formula_medicamento_id' => ['required', Rule::exists('formula_medicamento', 'id')],
             'fecha_entrega' => ['required', 'date'],
@@ -140,6 +182,15 @@ class EntregaController extends Controller
 
         if ((int) $itemAnteriorId !== (int) $validated['formula_medicamento_id']) {
             $this->sincronizarItemYFormula($itemAnteriorId);
+        }
+
+        if ($estadoAnterior !== $entrega->estado_entrega) {
+            event(new EntregaEstadoActualizado(
+                $entrega->fresh(['formulaItem.formulaMedica.paciente.user', 'formulaItem.medicamento']),
+                $estadoAnterior,
+                $entrega->estado_entrega,
+                $request->user(),
+            ));
         }
 
         return redirect()->route('entregas.index')->with('success', 'Entrega actualizada correctamente.');

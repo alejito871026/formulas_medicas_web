@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-#[Fillable(['name', 'email', 'password', 'role_id', 'activo'])]
+#[Fillable(['name', 'email', 'password', 'role_id', 'activo', 'telefono', 'direccion', 'avatar', 'otp_code', 'otp_expires_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements JWTSubject
 {
@@ -31,7 +31,39 @@ class User extends Authenticatable implements JWTSubject
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'activo' => 'boolean',
+            'otp_expires_at' => 'datetime',
         ];
+    }
+
+    public function generateOtp(): string
+    {
+        $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        $this->otp_code = $otp;
+        $this->otp_expires_at = now()->addMinutes(5);
+        $this->save();
+
+        return $otp;
+    }
+
+    public function verifyOtp(string $code): bool
+    {
+        if (! is_string($this->otp_code) || trim($this->otp_code) === '' || ! $this->otp_expires_at) {
+            return false;
+        }
+
+        if (now()->gt($this->otp_expires_at)) {
+            return false;
+        }
+
+        return hash_equals($this->otp_code, $code);
+    }
+
+    public function clearOtp(): void
+    {
+        $this->otp_code = null;
+        $this->otp_expires_at = null;
+        $this->save();
     }
 
     public function role(): BelongsTo
@@ -57,5 +89,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims(): array
     {
         return [];
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->avatar ? asset('storage/' . $this->avatar) : null;
     }
 }

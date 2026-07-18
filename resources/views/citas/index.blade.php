@@ -56,6 +56,8 @@
                 @if (($estado ?? 'todos') !== 'todos' || ($motivo ?? 'todos') !== 'todos' || ($busqueda ?? '') !== '')
                     <a href="{{ route('citas.index') }}" class="btn btn-muted">Limpiar</a>
                 @endif
+
+                <a href="{{ route('citas.export-pdf', request()->query()) }}" class="btn btn-danger">Exportar PDF</a>
             </form>
         </div>
 

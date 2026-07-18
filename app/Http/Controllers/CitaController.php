@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CitaEstadoActualizado;
 use App\Models\Cita;
 use App\Models\FormulaMedica;
 use App\Models\Paciente;
@@ -81,6 +82,58 @@ class CitaController extends Controller
         ]);
     }
 
+    public function exportPdf(Request $request)
+    {
+        $user = $request->user();
+        $rol = $user?->role?->nombre;
+        $estado = $request->query('estado', 'todos');
+        $motivo = $request->query('motivo', 'todos');
+        $busqueda = trim((string) $request->query('q', ''));
+        $busquedaAplicada = mb_strlen($busqueda) > 5 ? $busqueda : '';
+
+        $query = Cita::query()
+            ->with(['paciente.user', 'formulaMedica'])
+            ->orderByDesc('fecha_cita')
+            ->orderByDesc('hora_cita');
+
+        if ($rol !== 'administrativo') {
+            $query->whereHas('paciente', fn ($subQuery) => $subQuery->where('user_id', $user?->id));
+        }
+
+        if ($estado !== 'todos') {
+            $query->where('estado', $estado);
+        }
+
+        if ($motivo !== 'todos') {
+            $query->where('motivo', $motivo);
+        }
+
+        if ($busquedaAplicada !== '') {
+            $query->where(function ($subQuery) use ($busquedaAplicada): void {
+                $subQuery->where('motivo', 'like', "%{$busquedaAplicada}%")
+                    ->orWhere('observaciones', 'like', "%{$busquedaAplicada}%")
+                    ->orWhereHas('formulaMedica', fn ($formulaQuery) => $formulaQuery->where('numero_formula', 'like', "%{$busquedaAplicada}%"))
+                    ->orWhereHas('paciente', function ($pacienteQuery) use ($busquedaAplicada): void {
+                        $pacienteQuery->where('nombres', 'like', "%{$busquedaAplicada}%")
+                            ->orWhere('apellidos', 'like', "%{$busquedaAplicada}%")
+                            ->orWhere('numero_documento', 'like', "%{$busquedaAplicada}%");
+                    });
+            });
+        }
+
+        $citas = $query->get();
+
+        $pdf = app('dompdf.wrapper')->loadView('pdf.citas', [
+            'citas' => $citas,
+            'estado' => $estado,
+            'motivo' => $motivo,
+            'busqueda' => $busqueda,
+            'usuario' => $user,
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download('listado-citas-' . now()->format('Y-m-d') . '.pdf');
+    }
+
     public function create()
     {
         return view('citas.create', [
@@ -129,6 +182,8 @@ class CitaController extends Controller
 
     public function update(Request $request, Cita $cita): RedirectResponse
     {
+        $estadoAnterior = $cita->estado;
+
         $validated = $request->validate([
             'paciente_id' => ['required', Rule::exists('pacientes', 'id')],
             'formula_medica_id' => ['nullable', Rule::exists('formulas_medicas', 'id')],
@@ -150,6 +205,15 @@ class CitaController extends Controller
         }
 
         $cita->update($validated);
+
+        if ($estadoAnterior !== $cita->estado) {
+            event(new CitaEstadoActualizado(
+                $cita->fresh(['paciente.user', 'formulaMedica']),
+                $estadoAnterior,
+                $cita->estado,
+                $request->user(),
+            ));
+        }
 
         return redirect()->route('citas.index')->with('success', 'Cita actualizada correctamente.');
     }

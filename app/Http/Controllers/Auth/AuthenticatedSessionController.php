@@ -2,15 +2,22 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
+use App\Services\ResendEmailService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
+    public function __construct(private readonly ResendEmailService $resendEmailService)
+    {
+    }
+
     public function create(): Response
     {
         return response()
@@ -43,9 +50,33 @@ class AuthenticatedSessionController extends Controller
             ]);
         }
 
-        $request->session()->regenerate();
+        if (! $authUser instanceof User) {
+            throw ValidationException::withMessages([
+                'email' => 'No fue posible iniciar sesion.',
+            ]);
+        }
 
-        return redirect()->intended(route('dashboard'));
+        $remember = $request->boolean('remember');
+        $otp = $authUser->generateOtp();
+
+        $this->resendEmailService->send(
+            $authUser->email,
+            'Codigo de verificacion',
+            View::make('emails.otp', [
+                'otp' => $otp,
+                'user' => $authUser,
+            ])->render(),
+            "Tu codigo de verificacion es: {$otp}. Este codigo es valido por 5 minutos."
+        );
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        $request->session()->put('otp_user_id', $authUser->id);
+        $request->session()->put('otp_remember', $remember);
+
+        return redirect()->route('otp.verify');
     }
 
     public function destroy(Request $request): RedirectResponse

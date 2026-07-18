@@ -32,9 +32,27 @@
 
                 @if ($user)
                     <div class="mt-6 rounded-2xl bg-white/10 p-4 text-sm">
-                        <p class="font-semibold text-white">{{ $user->name }}</p>
-                        <p class="mt-1 text-teal-100">{{ $user->email }}</p>
+                        <div class="mb-4 flex items-center gap-3">
+                            @if ($user->avatar_url)
+                                <img src="{{ $user->avatar_url }}" alt="Avatar" class="h-12 w-12 rounded-full object-cover ring-2 ring-white/60">
+                            @else
+                                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 text-base font-semibold text-white">
+                                    {{ strtoupper(mb_substr($user->name, 0, 1)) }}
+                                </div>
+                            @endif
+                            <div class="min-w-0">
+                                <p class="font-semibold text-white leading-tight">{{ $user->name }}</p>
+                                <p class="mt-1 break-all text-xs leading-5 text-teal-100">{{ $user->email }}</p>
+                            </div>
+                        </div>
+
                         <p class="mt-1 text-xs uppercase tracking-wide text-teal-200">Rol: {{ ucfirst($rol ?? 'sin rol') }}</p>
+                        <a
+                            href="{{ route('profile.edit') }}"
+                            class="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-teal-200/30 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/15"
+                        >
+                            Mi perfil
+                        </a>
                         <form class="mt-4" method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button
@@ -64,15 +82,23 @@
                             <p class="text-xs text-slate-500">Rol: {{ ucfirst($rol ?? 'sin rol') }}</p>
                         </div>
 
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button
-                                type="submit"
-                                class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+                        <div class="flex items-center gap-2">
+                            <a
+                                href="{{ route('profile.edit') }}"
+                                class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
                             >
-                                Salir
-                            </button>
-                        </form>
+                                Perfil
+                            </a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button
+                                    type="submit"
+                                    class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+                                >
+                                    Salir
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 @endif
 

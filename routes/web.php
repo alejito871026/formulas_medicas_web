@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\OtpVerificationController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -15,12 +17,17 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
 	Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 	Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
+	Route::get('/otp-verify', [OtpVerificationController::class, 'show'])->name('otp.verify');
+	Route::post('/otp-verify', [OtpVerificationController::class, 'verify'])->name('otp.verify.post');
+	Route::post('/otp-resend', [OtpVerificationController::class, 'resend'])->name('otp.resend');
 	Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 	Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
 });
 
 Route::middleware('auth')->group(function () {
 	Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+	Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
+	Route::put('/perfil', [ProfileController::class, 'update'])->name('profile.update');
 
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -33,6 +40,7 @@ Route::middleware('auth')->group(function () {
 		Route::delete('/formulas-medicas/{formula}', 'App\\Http\\Controllers\\FormulaMedicaController@destroy')->name('formulas.destroy');
 
 		Route::get('/citas', 'App\\Http\\Controllers\\CitaController@index')->name('citas.index');
+		Route::get('/citas/exportar-pdf', 'App\\Http\\Controllers\\CitaController@exportPdf')->name('citas.export-pdf');
 	});
 
 	Route::middleware('rol:despachador,administrativo')->group(function () {
@@ -51,6 +59,7 @@ Route::middleware('auth')->group(function () {
 		Route::delete('/inventario/{inventario}', 'App\\Http\\Controllers\\InventarioController@destroy')->name('inventarios.destroy');
 
 		Route::get('/entregas', 'App\\Http\\Controllers\\EntregaController@index')->name('entregas.index');
+		Route::get('/entregas/exportar-pdf', 'App\\Http\\Controllers\\EntregaController@exportPdf')->name('entregas.export-pdf');
 		Route::get('/entregas/crear', 'App\\Http\\Controllers\\EntregaController@create')->name('entregas.create');
 		Route::post('/entregas', 'App\\Http\\Controllers\\EntregaController@store')->name('entregas.store');
 		Route::get('/entregas/{entrega}/editar', 'App\\Http\\Controllers\\EntregaController@edit')->name('entregas.edit');

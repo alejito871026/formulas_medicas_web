@@ -12,7 +12,7 @@
                 <h1 class="text-2xl font-semibold">Crear Cuenta</h1>
                 <p class="mt-2 text-sm text-slate-600">Selecciona tu rol para habilitar la interfaz correspondiente del sistema.</p>
 
-                <form class="mt-6 space-y-4" method="POST" action="{{ route('register.store') }}">
+                <form class="mt-6 space-y-4" method="POST" action="{{ route('register.store') }}" enctype="multipart/form-data">
                     @csrf
 
                     <div>
@@ -40,6 +40,31 @@
                             @endforeach
                         </select>
                         @error('role_id')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="mb-1 block text-sm font-medium" for="telefono">Telefono</label>
+                        <input id="telefono" name="telefono" type="text" value="{{ old('telefono') }}" class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('telefono') border-red-500 @enderror">
+                        @error('telefono')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="mb-1 block text-sm font-medium" for="direccion">Direccion</label>
+                        <textarea id="direccion" name="direccion" rows="3" class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('direccion') border-red-500 @enderror">{{ old('direccion') }}</textarea>
+                        @error('direccion')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="mb-1 block text-sm font-medium" for="avatar">Avatar</label>
+                        <input id="avatar" name="avatar" type="file" accept="image/*" class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm @error('avatar') border-red-500 @enderror">
+                        <p class="mt-1 text-xs text-slate-500">Opcional. Maximo 2 MB.</p>
+                        @error('avatar')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

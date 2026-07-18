@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Policies\FormulaMedicaPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Routing\UrlGenerator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,8 +22,12 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot(UrlGenerator $url): void
     {
+        if (config('app.env') === 'production') {
+            $url->forceScheme('https');
+        }
+
         Gate::policy(FormulaMedica::class, FormulaMedicaPolicy::class);
 
         Gate::define('acceso-dashboard', fn (User $user): bool =>
