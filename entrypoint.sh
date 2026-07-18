@@ -42,6 +42,20 @@ php-fpm -D
             >> /var/www/html/storage/logs/bootstrap-db.log
         php artisan db:seed --class=DatabaseSeeder --force \
             >> /var/www/html/storage/logs/demo-seeder.log 2>&1
+
+        echo "Forzando seeders clave para dashboard (formulas, citas, entregas)..." \
+            >> /var/www/html/storage/logs/bootstrap-db.log
+        php artisan db:seed --class=FormulaMedicaSeeder --force \
+            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
+        php artisan db:seed --class=FormulaMedicaItemSeeder --force \
+            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
+        php artisan db:seed --class=CitaSeeder --force \
+            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
+        php artisan db:seed --class=EntregaSeeder --force \
+            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
+        php artisan db:seed --class=BackfillLastSixMonthsSeeder --force \
+            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
+
         echo "$(date '+%Y-%m-%d %H:%M:%S') DatabaseSeeder finalizado" \
             >> /var/www/html/storage/logs/demo-seeder.log
     else
