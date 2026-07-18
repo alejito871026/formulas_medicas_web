@@ -24,6 +24,10 @@ php artisan storage:link --force || true
 echo "Ejecutando migraciones de base de datos..."
 php artisan migrate --force
 
+# Sembrar roles base para permitir registro/autenticacion en entornos nuevos
+echo "Sembrando roles base..."
+php artisan db:seed --class=RoleSeeder --force
+
 # Iniciar PHP-FPM en segundo plano
 php-fpm -D
 
