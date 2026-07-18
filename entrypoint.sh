@@ -32,16 +32,23 @@ php artisan db:seed --class=RoleSeeder --force
 echo "Sembrando usuarios base de despliegue..."
 php artisan db:seed --class=RenderUsersSeeder --force
 
-# Sembrado demo opcional para entornos de exhibicion/seminario
+# Iniciar PHP-FPM en segundo plano
+php-fpm -D
+
+# Sembrado demo opcional para entornos de exhibicion/seminario.
+# Se ejecuta en segundo plano para no bloquear la deteccion de puerto en Render.
 if [ "$RUN_DEMO_SEEDERS" = "true" ]; then
-    echo "RUN_DEMO_SEEDERS=true: ejecutando DatabaseSeeder (datos demo y ultimos 6 meses)..."
-    php artisan db:seed --class=DatabaseSeeder --force
+    echo "RUN_DEMO_SEEDERS=true: ejecutando DatabaseSeeder en segundo plano..."
+    (
+        php artisan db:seed --class=DatabaseSeeder --force \
+            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
+        echo "$(date '+%Y-%m-%d %H:%M:%S') DatabaseSeeder finalizado" \
+            >> /var/www/html/storage/logs/demo-seeder.log
+    ) &
+    echo "Seeder demo lanzado. Revisa storage/logs/demo-seeder.log para seguimiento."
 else
     echo "RUN_DEMO_SEEDERS desactivado: se omite DatabaseSeeder."
 fi
-
-# Iniciar PHP-FPM en segundo plano
-php-fpm -D
 
 # Arrancar el servidor web Nginx en primer plano
 echo "Iniciando Nginx..."
