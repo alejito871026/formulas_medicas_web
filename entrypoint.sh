@@ -20,35 +20,43 @@ php artisan view:cache
 # Enlace simbolico para storage (si se usa)
 php artisan storage:link --force || true
 
-# Ejecutar migraciones automaticamente
-echo "Ejecutando migraciones de base de datos..."
-php artisan migrate --force
-
-# Sembrar roles base para permitir registro/autenticacion en entornos nuevos
-echo "Sembrando roles base..."
-php artisan db:seed --class=RoleSeeder --force
-
-# Crear/actualizar usuarios de acceso inicial en Render
-echo "Sembrando usuarios base de despliegue..."
-php artisan db:seed --class=RenderUsersSeeder --force
-
 # Iniciar PHP-FPM en segundo plano
 php-fpm -D
 
-# Sembrado demo opcional para entornos de exhibicion/seminario.
-# Se ejecuta en segundo plano para no bloquear la deteccion de puerto en Render.
-if [ "$RUN_DEMO_SEEDERS" = "true" ]; then
-    echo "RUN_DEMO_SEEDERS=true: ejecutando DatabaseSeeder en segundo plano..."
-    (
+# Ejecutar tareas de base de datos en segundo plano para no bloquear el arranque del puerto HTTP.
+(
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Iniciando migraciones y seeders..." \
+        >> /var/www/html/storage/logs/bootstrap-db.log
+
+    echo "Ejecutando migraciones de base de datos..."
+    php artisan migrate --force \
+        >> /var/www/html/storage/logs/bootstrap-db.log 2>&1
+
+    echo "Sembrando roles base..."
+    php artisan db:seed --class=RoleSeeder --force \
+        >> /var/www/html/storage/logs/bootstrap-db.log 2>&1
+
+    echo "Sembrando usuarios base de despliegue..."
+    php artisan db:seed --class=RenderUsersSeeder --force \
+        >> /var/www/html/storage/logs/bootstrap-db.log 2>&1
+
+    # Sembrado demo opcional para entornos de exhibicion/seminario.
+    if [ "$RUN_DEMO_SEEDERS" = "true" ]; then
+        echo "RUN_DEMO_SEEDERS=true: ejecutando DatabaseSeeder..."
         php artisan db:seed --class=DatabaseSeeder --force \
             >> /var/www/html/storage/logs/demo-seeder.log 2>&1
         echo "$(date '+%Y-%m-%d %H:%M:%S') DatabaseSeeder finalizado" \
             >> /var/www/html/storage/logs/demo-seeder.log
-    ) &
-    echo "Seeder demo lanzado. Revisa storage/logs/demo-seeder.log para seguimiento."
-else
-    echo "RUN_DEMO_SEEDERS desactivado: se omite DatabaseSeeder."
-fi
+    else
+        echo "RUN_DEMO_SEEDERS desactivado: se omite DatabaseSeeder." \
+            >> /var/www/html/storage/logs/bootstrap-db.log
+    fi
+
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Tareas de base de datos finalizadas." \
+        >> /var/www/html/storage/logs/bootstrap-db.log
+) &
+
+echo "Tareas de base de datos lanzadas en segundo plano."
 
 # Arrancar el servidor web Nginx en primer plano
 echo "Iniciando Nginx..."
