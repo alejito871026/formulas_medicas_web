@@ -15,6 +15,24 @@ class CitaController extends Controller
     private const ESTADOS = ['programada', 'confirmada', 'reprogramada', 'cancelada', 'atendida', 'no_asistio'];
     private const PDF_MAX_ROWS = 120;
 
+    private function pacienteAutenticado(Request $request): ?Paciente
+    {
+        return Paciente::query()
+            ->where('user_id', $request->user()?->id)
+            ->first();
+    }
+
+    private function asegurarAccesoCita(Request $request, Cita $cita): void
+    {
+        if ($request->user()?->hasRole('administrativo')) {
+            return;
+        }
+
+        if ((int) $cita->paciente?->user_id !== (int) $request->user()?->id) {
+            abort(403);
+        }
+    }
+
     public function index(Request $request)
     {
         $user = $request->user();
@@ -142,12 +160,25 @@ class CitaController extends Controller
         return $pdf->download('listado-citas-' . now()->format('Y-m-d') . '.pdf');
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $pacientes = $request->user()?->hasRole('administrativo')
+            ? Paciente::query()->orderBy('nombres')->get()
+            : Paciente::query()->where('user_id', $request->user()?->id)->orderBy('nombres')->get();
+
+        if ($pacientes->isEmpty()) {
+            return redirect()->route('citas.index')->with('error', 'Tu cuenta no tiene un paciente asociado.');
+        }
+
+        $formulas = $request->user()?->hasRole('administrativo')
+            ? FormulaMedica::query()->orderByDesc('id')->get()
+            : FormulaMedica::query()->whereHas('paciente', fn ($query) => $query->where('user_id', $request->user()?->id))->orderByDesc('id')->get();
+
         return view('citas.create', [
-            'pacientes' => Paciente::query()->orderBy('nombres')->get(),
-            'formulas' => FormulaMedica::query()->orderByDesc('id')->get(),
+            'pacientes' => $pacientes,
+            'formulas' => $formulas,
             'estadosDisponibles' => self::ESTADOS,
+            'pacienteBloqueado' => ! $request->user()?->hasRole('administrativo'),
         ]);
     }
 
@@ -162,6 +193,12 @@ class CitaController extends Controller
             'estado' => ['required', Rule::in(self::ESTADOS)],
             'observaciones' => ['nullable', 'string'],
         ]);
+
+        $paciente = Paciente::query()->findOrFail($validated['paciente_id']);
+
+        if (! $request->user()?->hasRole('administrativo') && (int) $paciente->user_id !== (int) $request->user()?->id) {
+            abort(403);
+        }
 
         if (! empty($validated['formula_medica_id'])) {
             $formula = FormulaMedica::query()->find($validated['formula_medica_id']);
@@ -178,18 +215,27 @@ class CitaController extends Controller
         return redirect()->route('citas.index')->with('success', 'Cita registrada correctamente.');
     }
 
-    public function edit(Cita $cita)
+    public function edit(Request $request, Cita $cita)
     {
+        $this->asegurarAccesoCita($request, $cita->load('paciente'));
+
         return view('citas.edit', [
             'cita' => $cita,
-            'pacientes' => Paciente::query()->orderBy('nombres')->get(),
-            'formulas' => FormulaMedica::query()->orderByDesc('id')->get(),
+            'pacientes' => $request->user()?->hasRole('administrativo')
+                ? Paciente::query()->orderBy('nombres')->get()
+                : Paciente::query()->where('user_id', $request->user()?->id)->orderBy('nombres')->get(),
+            'formulas' => $request->user()?->hasRole('administrativo')
+                ? FormulaMedica::query()->orderByDesc('id')->get()
+                : FormulaMedica::query()->whereHas('paciente', fn ($query) => $query->where('user_id', $request->user()?->id))->orderByDesc('id')->get(),
             'estadosDisponibles' => self::ESTADOS,
+            'pacienteBloqueado' => ! $request->user()?->hasRole('administrativo'),
         ]);
     }
 
     public function update(Request $request, Cita $cita): RedirectResponse
     {
+        $this->asegurarAccesoCita($request, $cita->load('paciente'));
+
         $estadoAnterior = $cita->estado;
 
         $validated = $request->validate([
@@ -201,6 +247,12 @@ class CitaController extends Controller
             'estado' => ['required', Rule::in(self::ESTADOS)],
             'observaciones' => ['nullable', 'string'],
         ]);
+
+        $paciente = Paciente::query()->findOrFail($validated['paciente_id']);
+
+        if (! $request->user()?->hasRole('administrativo') && (int) $paciente->user_id !== (int) $request->user()?->id) {
+            abort(403);
+        }
 
         if (! empty($validated['formula_medica_id'])) {
             $formula = FormulaMedica::query()->find($validated['formula_medica_id']);
@@ -228,6 +280,8 @@ class CitaController extends Controller
 
     public function destroy(Cita $cita): RedirectResponse
     {
+        $this->asegurarAccesoCita(request(), $cita->load('paciente'));
+
         $cita->delete();
 
         return redirect()->route('citas.index')->with('success', 'Cita eliminada correctamente.');

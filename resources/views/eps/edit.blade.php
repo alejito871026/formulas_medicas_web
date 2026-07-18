@@ -16,7 +16,7 @@
     <article class="entity-form-card">
         <div class="entity-form-head">
             <h3 class="entity-form-title">Informacion de la EPS</h3>
-            <p class="entity-form-subtitle">Mantener estos datos actualizados mejora la gestion operativa y el soporte a clientes.</p>
+            <p class="entity-form-subtitle">Mantener estos datos actualizados mejora la gestion operativa y el soporte a pacientes.</p>
         </div>
 
         <div class="entity-form-body">

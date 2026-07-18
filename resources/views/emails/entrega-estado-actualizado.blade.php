@@ -5,7 +5,7 @@
     <title>Actualizacion de estado de entrega</title>
 </head>
 <body>
-    <p>Hola {{ $entrega->formulaItem?->formulaMedica?->paciente?->user?->name ?? 'cliente' }},</p>
+    <p>Hola {{ $entrega->formulaItem?->formulaMedica?->paciente?->user?->name ?? 'paciente' }},</p>
 
     <p>
         El estado de una entrega asociada a tu formula

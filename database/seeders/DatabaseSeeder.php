@@ -82,7 +82,7 @@ class DatabaseSeeder extends Seeder
         User::query()->updateOrCreate(
             ['email' => 'cliente@formulas.test'],
             [
-                'name' => 'Cliente Demo',
+                'name' => 'Paciente Demo',
                 'password' => 'password123',
                 'role_id' => $roles['cliente'] ?? null,
             ]
@@ -91,7 +91,7 @@ class DatabaseSeeder extends Seeder
         User::query()->updateOrCreate(
             ['email' => 'test@example.com'],
             [
-                'name' => 'Test User',
+                'name' => 'Paciente Test',
                 'password' => 'password123',
                 'role_id' => $roles['cliente'] ?? null,
             ]

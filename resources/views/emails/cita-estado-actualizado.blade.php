@@ -5,7 +5,7 @@
     <title>Actualizacion de estado de cita</title>
 </head>
 <body>
-    <p>Hola {{ $cita->paciente?->user?->name ?? 'cliente' }},</p>
+    <p>Hola {{ $cita->paciente?->user?->name ?? 'paciente' }},</p>
 
     <p>
         El estado de tu cita del

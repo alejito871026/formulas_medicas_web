@@ -10,6 +10,7 @@
         @php
             $user = auth()->user();
             $rol = $user?->role?->nombre;
+            $rolLabel = $rol === 'cliente' ? 'paciente' : ($rol ?? 'sin rol');
             $menu = [
                 ['label' => 'Citas', 'route' => 'citas.index', 'ability' => 'acceso-citas'],
                 ['label' => 'Dashboard', 'route' => 'dashboard', 'ability' => 'acceso-dashboard'],
@@ -46,7 +47,7 @@
                             </div>
                         </div>
 
-                        <p class="mt-1 text-xs uppercase tracking-wide text-teal-200">Rol: {{ ucfirst($rol ?? 'sin rol') }}</p>
+                        <p class="mt-1 text-xs uppercase tracking-wide text-teal-200">Rol: {{ ucfirst($rolLabel) }}</p>
                         <a
                             href="{{ route('profile.edit') }}"
                             class="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-teal-200/30 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/15"
@@ -79,7 +80,7 @@
                     <div class="mb-5 flex items-center justify-between rounded-2xl bg-white px-4 py-3 shadow-sm ring-1 ring-slate-200 lg:hidden">
                         <div>
                             <p class="text-sm font-semibold text-slate-900">{{ $user->name }}</p>
-                            <p class="text-xs text-slate-500">Rol: {{ ucfirst($rol ?? 'sin rol') }}</p>
+                            <p class="text-xs text-slate-500">Rol: {{ ucfirst($rolLabel) }}</p>
                         </div>
 
                         <div class="flex items-center gap-2">

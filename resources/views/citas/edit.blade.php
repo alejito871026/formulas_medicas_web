@@ -28,25 +28,29 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Paciente</label>
-                        <select name="paciente_id" required class="select-control w-full">
+                        <select name="paciente_id" required @disabled($pacienteBloqueado ?? false) class="select-control w-full">
                             @foreach ($pacientes as $paciente)
                                 <option value="{{ $paciente->id }}" @selected((string) old('paciente_id', $cita->paciente_id) === (string) $paciente->id)>
                                     {{ $paciente->nombres }} {{ $paciente->apellidos }} · {{ $paciente->numero_documento }}
                                 </option>
                             @endforeach
                         </select>
+                        @if (($pacienteBloqueado ?? false) && $pacientes->count() === 1)
+                            <input type="hidden" name="paciente_id" value="{{ old('paciente_id', $cita->paciente_id) }}">
+                        @endif
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Formula medica (opcional)</label>
-                        <select name="formula_medica_id" class="select-control w-full">
+                        <select id="formula_medica_id" name="formula_medica_id" class="select-control w-full">
                             <option value="">Sin formula asociada</option>
                             @foreach ($formulas as $formula)
-                                <option value="{{ $formula->id }}" @selected((string) old('formula_medica_id', $cita->formula_medica_id) === (string) $formula->id)>
+                                <option value="{{ $formula->id }}" data-paciente-id="{{ $formula->paciente_id }}" @selected((string) old('formula_medica_id', $cita->formula_medica_id) === (string) $formula->id)>
                                     {{ $formula->numero_formula }} · Paciente #{{ $formula->paciente_id }}
                                 </option>
                             @endforeach
                         </select>
+                        <p class="mt-1 text-xs text-slate-500">Solo se muestran formulas del paciente seleccionado.</p>
                     </div>
 
                     <div>
@@ -86,4 +90,41 @@
             </div>
         </article>
     </section>
+
+    <script>
+    (function () {
+        const pacienteSelect = document.querySelector('select[name="paciente_id"]');
+        const formulaSelect = document.getElementById('formula_medica_id');
+
+        if (!pacienteSelect || !formulaSelect) {
+            return;
+        }
+
+        const syncFormulas = () => {
+            const pacienteId = pacienteSelect.value;
+            let selectedStillVisible = false;
+
+            Array.from(formulaSelect.options).forEach((option, index) => {
+                if (index === 0) {
+                    option.hidden = false;
+                    return;
+                }
+
+                const visible = !pacienteId || option.dataset.pacienteId === pacienteId;
+                option.hidden = !visible;
+
+                if (visible && option.selected) {
+                    selectedStillVisible = true;
+                }
+            });
+
+            if (!selectedStillVisible) {
+                formulaSelect.value = '';
+            }
+        };
+
+        syncFormulas();
+        pacienteSelect.addEventListener('change', syncFormulas);
+    })();
+    </script>
 @endsection

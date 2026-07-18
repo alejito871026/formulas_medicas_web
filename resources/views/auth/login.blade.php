@@ -34,7 +34,7 @@
                             </article>
                             <article class="rounded-2xl bg-white/15 p-4 ring-1 ring-white/30">
                                 <p class="text-sm font-semibold text-white">Interfaz por actor</p>
-                                <p class="mt-1 text-xs text-teal-50/90">Vistas diferenciadas para cliente, despachador y administrativo.</p>
+                                <p class="mt-1 text-xs text-teal-50/90">Vistas diferenciadas para paciente, despachador y administrativo.</p>
                             </article>
                         </div>
                     </div>

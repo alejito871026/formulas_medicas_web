@@ -7,14 +7,14 @@
         $titulos = [
             'administrativo' => [
                 'titulo' => 'Dashboard Administrativo',
-                'subtitulo' => 'Analitica operativa de clientes, atenciones y demanda de medicamentos.',
+                'subtitulo' => 'Analitica operativa de pacientes, atenciones y demanda de medicamentos.',
             ],
             'despachador' => [
                 'titulo' => 'Dashboard de Despacho',
                 'subtitulo' => 'Seguimiento de entregas, inventario critico y demanda de medicamentos.',
             ],
             'cliente' => [
-                'titulo' => 'Mi Panel de Cliente',
+                'titulo' => 'Mi Panel de Paciente',
                 'subtitulo' => 'Estado de formulas, entregas y citas para gestionar tu proceso.',
             ],
         ];
@@ -36,7 +36,7 @@
     @if ($rol === 'administrativo')
         <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             <article class="module-card p-5">
-                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Clientes registrados</p>
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Pacientes registrados</p>
                 <p class="mt-3 text-3xl font-semibold text-slate-900">{{ $totalClientes }}</p>
             </article>
             <article class="module-card p-5">
@@ -56,7 +56,7 @@
         <div class="mt-6 grid gap-6 xl:grid-cols-5">
             <article class="module-card p-6 xl:col-span-3">
                 <div class="flex items-center justify-between gap-3">
-                    <h3 class="text-lg font-semibold text-slate-900">Clientes registrados por mes</h3>
+                    <h3 class="text-lg font-semibold text-slate-900">Pacientes registrados por mes</h3>
                     <span class="badge badge-success">Ultimos 6 meses</span>
                 </div>
                 <div class="mt-4 h-[320px]">
@@ -122,7 +122,7 @@
                 data: {
                     labels: labelsMes,
                     datasets: [{
-                        label: 'Clientes',
+                        label: 'Pacientes',
                         data: clientesPorMes,
                         backgroundColor: 'rgba(14, 116, 144, 0.8)',
                         borderRadius: 8,
@@ -353,6 +353,7 @@
             <div class="mt-4 flex flex-wrap gap-3">
                 <a href="{{ route('formulas.index') }}" class="btn btn-primary">Ver mis formulas</a>
                 <a href="{{ route('formulas.create') }}" class="btn btn-secondary">Registrar formula</a>
+                <a href="{{ route('citas.create') }}" class="btn btn-secondary">Solicitar cita</a>
                 <a href="{{ route('citas.index') }}" class="btn btn-secondary">Consultar citas</a>
             </div>
         </article>

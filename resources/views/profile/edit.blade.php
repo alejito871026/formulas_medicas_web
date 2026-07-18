@@ -52,7 +52,7 @@
                     </div>
 
                     <p class="profile-avatar-name">{{ $user->name }}</p>
-                    <p class="profile-avatar-role">{{ ucfirst($user->role?->nombre ?? 'sin rol') }}</p>
+                    <p class="profile-avatar-role">{{ ucfirst(($user->role?->nombre ?? 'sin rol') === 'cliente' ? 'paciente' : ($user->role?->nombre ?? 'sin rol')) }}</p>
 
                     <label class="profile-avatar-upload">
                         <span>Cambiar avatar</span>

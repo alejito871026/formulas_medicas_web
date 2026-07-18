@@ -1,15 +1,15 @@
 @extends('layouts.app', [
-	'title' => 'Gestion de Clientes | Gestion de Formulas Medicas',
+	'title' => 'Gestion de Pacientes | Gestion de Formulas Medicas',
 ])
 
 @section('module_nav')
 	<div class="module-nav">
 		<div>
-			<p class="module-nav-title">Gestion de Clientes</p>
-			<p class="module-nav-subtitle">Administra clientes, filtros de estado y acciones de acceso.</p>
+			<p class="module-nav-title">Gestion de Pacientes</p>
+			<p class="module-nav-subtitle">Administra pacientes, filtros de estado y acciones de acceso.</p>
 		</div>
 		<a href="{{ route('pacientes.create') }}" class="btn btn-primary">
-			Nuevo cliente
+			Nuevo paciente
 		</a>
 	</div>
 @endsection
@@ -42,7 +42,7 @@
 			<table class="data-table">
 				<thead>
 					<tr>
-						<th>Cliente</th>
+						<th>Paciente</th>
 						<th>Documento</th>
 						<th>Contacto</th>
 						<th>EPS</th>
@@ -84,7 +84,7 @@
 										</button>
 									</form>
 
-									<form method="POST" action="{{ route('pacientes.destroy', $paciente) }}" data-feedback-form="true" onsubmit="return confirm('Esta accion eliminara el cliente y su usuario. Deseas continuar?');">
+									<form method="POST" action="{{ route('pacientes.destroy', $paciente) }}" data-feedback-form="true" onsubmit="return confirm('Esta accion eliminara el paciente y su usuario. Deseas continuar?');">
 										@csrf
 										@method('DELETE')
 										<button type="submit" class="btn btn-danger">
@@ -96,7 +96,7 @@
 						</tr>
 					@empty
 						<tr>
-							<td colspan="6" class="table-empty">No hay clientes registrados.</td>
+							<td colspan="6" class="table-empty">No hay pacientes registrados.</td>
 						</tr>
 					@endforelse
 				</tbody>

@@ -28,13 +28,16 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Paciente</label>
-                        <select name="paciente_id" required class="select-control w-full">
+                        <select name="paciente_id" required @disabled($pacienteBloqueado ?? false) class="select-control w-full">
                             @foreach ($pacientes as $paciente)
                                 <option value="{{ $paciente->id }}" @selected((string) old('paciente_id', $formula->paciente_id) === (string) $paciente->id)>
                                     {{ $paciente->nombres }} {{ $paciente->apellidos }} · {{ $paciente->numero_documento }}
                                 </option>
                             @endforeach
                         </select>
+                        @if (($pacienteBloqueado ?? false) && $pacientes->count() === 1)
+                            <input type="hidden" name="paciente_id" value="{{ old('paciente_id', $formula->paciente_id) }}">
+                        @endif
                     </div>
 
                     <div>
@@ -54,7 +57,12 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Medico tratante</label>
-                        <input type="text" name="medico_tratante" value="{{ old('medico_tratante', $formula->medico_tratante) }}" maxlength="120" class="input-control w-full">
+                        <input type="text" name="medico_tratante" list="medicos-tratantes" value="{{ old('medico_tratante', $formula->medico_tratante) }}" maxlength="120" class="input-control w-full">
+                        <datalist id="medicos-tratantes">
+                            @foreach (($medicosTratantes ?? []) as $medico)
+                                <option value="{{ $medico }}"></option>
+                            @endforeach
+                        </datalist>
                     </div>
 
                     <div>

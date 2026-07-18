@@ -6,7 +6,7 @@
     <div class="module-nav">
         <div>
             <p class="module-nav-title">Catalogo EPS</p>
-            <p class="module-nav-subtitle">Administra las EPS disponibles para el registro y edicion de clientes.</p>
+            <p class="module-nav-subtitle">Administra las EPS disponibles para el registro y edicion de pacientes.</p>
         </div>
         <button id="mostrar-form-eps" type="button" class="btn btn-primary">Nueva EPS</button>
     </div>

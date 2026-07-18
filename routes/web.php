@@ -41,6 +41,11 @@ Route::middleware('auth')->group(function () {
 
 		Route::get('/citas', 'App\\Http\\Controllers\\CitaController@index')->name('citas.index');
 		Route::get('/citas/exportar-pdf', 'App\\Http\\Controllers\\CitaController@exportPdf')->name('citas.export-pdf');
+		Route::get('/citas/crear', 'App\\Http\\Controllers\\CitaController@create')->name('citas.create');
+		Route::post('/citas', 'App\\Http\\Controllers\\CitaController@store')->name('citas.store');
+		Route::get('/citas/{cita}/editar', 'App\\Http\\Controllers\\CitaController@edit')->name('citas.edit');
+		Route::put('/citas/{cita}', 'App\\Http\\Controllers\\CitaController@update')->name('citas.update');
+		Route::delete('/citas/{cita}', 'App\\Http\\Controllers\\CitaController@destroy')->name('citas.destroy');
 	});
 
 	Route::middleware('rol:despachador,administrativo')->group(function () {
@@ -91,10 +96,5 @@ Route::middleware('auth')->group(function () {
 		Route::patch('/pacientes/{paciente}/toggle', 'App\\Http\\Controllers\\PacienteController@toggle')->name('pacientes.toggle');
 		Route::delete('/pacientes/{paciente}', 'App\\Http\\Controllers\\PacienteController@destroy')->name('pacientes.destroy');
 
-		Route::get('/citas/crear', 'App\\Http\\Controllers\\CitaController@create')->name('citas.create');
-		Route::post('/citas', 'App\\Http\\Controllers\\CitaController@store')->name('citas.store');
-		Route::get('/citas/{cita}/editar', 'App\\Http\\Controllers\\CitaController@edit')->name('citas.edit');
-		Route::put('/citas/{cita}', 'App\\Http\\Controllers\\CitaController@update')->name('citas.update');
-		Route::delete('/citas/{cita}', 'App\\Http\\Controllers\\CitaController@destroy')->name('citas.destroy');
 	});
 });

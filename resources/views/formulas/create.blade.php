@@ -7,7 +7,7 @@
         <article class="entity-form-card">
             <div class="entity-form-head">
                 <h3 class="entity-form-title">Registrar formula medica</h3>
-                <p class="entity-form-subtitle">Asocia paciente, vigencia y estado operativo de la formula.</p>
+                <p class="entity-form-subtitle">Registra una formula para el paciente autenticado o para un paciente seleccionado por administracion.</p>
             </div>
 
             <div class="entity-form-body">
@@ -27,37 +27,45 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Paciente</label>
-                        <select name="paciente_id" required class="select-control w-full">
+                        <select name="paciente_id" required @disabled($pacienteBloqueado ?? false) class="select-control w-full">
                             <option value="">Selecciona un paciente</option>
                             @foreach ($pacientes as $paciente)
-                                <option value="{{ $paciente->id }}" @selected((string) old('paciente_id') === (string) $paciente->id)>
+                                <option value="{{ $paciente->id }}" @selected((string) old('paciente_id', $pacientes->count() === 1 ? $pacientes->first()->id : null) === (string) $paciente->id)>
                                     {{ $paciente->nombres }} {{ $paciente->apellidos }} · {{ $paciente->numero_documento }}
                                 </option>
                             @endforeach
                         </select>
+                        @if (($pacienteBloqueado ?? false) && $pacientes->count() === 1)
+                            <input type="hidden" name="paciente_id" value="{{ old('paciente_id', $pacientes->first()->id) }}">
+                        @endif
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Numero de formula</label>
-                            <input type="text" name="numero_formula" value="{{ old('numero_formula') }}" required maxlength="40" class="input-control w-full" placeholder="Ej: FM-2026-0001">
+                        <input type="text" name="numero_formula" value="{{ old('numero_formula') }}" required maxlength="40" class="input-control w-full" placeholder="Ej: FM-2026-0001">
                     </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Fecha de formula</label>
-                        <input type="date" name="fecha_formula" value="{{ old('fecha_formula') }}" required class="input-control w-full">
+                        <input type="date" name="fecha_formula" value="{{ old('fecha_formula', now()->toDateString()) }}" required class="input-control w-full">
                     </div>
 
-                            <textarea name="diagnostico" rows="3" required maxlength="120" class="input-control w-full" placeholder="Diagnostico principal o CIE10">{{ old('diagnostico') }}</textarea>
+                    <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Fecha de vencimiento</label>
                         <input type="date" name="fecha_vencimiento" value="{{ old('fecha_vencimiento') }}" class="input-control w-full">
                     </div>
 
-                                    <input type="number" name="items[0][cantidad_formulada]" min="1" max="10000" step="1" value="1" required class="input-control w-full">
+                    <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Medico tratante</label>
-                        <input type="text" name="medico_tratante" value="{{ old('medico_tratante') }}" maxlength="120" class="input-control w-full" placeholder="Ej: Dra. Laura Rios">
+                        <input type="text" name="medico_tratante" list="medicos-tratantes" value="{{ old('medico_tratante') }}" maxlength="120" class="input-control w-full" placeholder="Ej: Dra. Laura Rios">
+                        <datalist id="medicos-tratantes">
+                            @foreach (($medicosTratantes ?? []) as $medico)
+                                <option value="{{ $medico }}"></option>
+                            @endforeach
+                        </datalist>
                     </div>
 
-                                    <input type="number" name="items[0][dias_tratamiento]" min="1" max="365" step="1" value="30" required class="input-control w-full">
+                    <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Estado</label>
                         <select name="estado" required class="select-control w-full">
                             @foreach ($estadosDisponibles as $estado)
@@ -66,7 +74,7 @@
                         </select>
                     </div>
 
-                                    <textarea name="items[0][indicaciones]" rows="2" maxlength="255" class="input-control w-full" placeholder="Tomar 1 tableta cada 8 horas"></textarea>
+                    <div class="entity-form-span-2">
                         <label class="mb-1 block text-sm font-medium text-slate-700">Observaciones</label>
                         <textarea name="observaciones" rows="3" maxlength="255" class="input-control w-full">{{ old('observaciones') }}</textarea>
                     </div>

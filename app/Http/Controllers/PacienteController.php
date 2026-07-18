@@ -118,7 +118,6 @@ class PacienteController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'email', 'max:120', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'tipo_documento' => ['required', Rule::in(self::TIPOS_DOCUMENTO)],
@@ -149,7 +148,7 @@ class PacienteController extends Controller
 
         DB::transaction(function () use ($validated, $roleCliente): void {
             $user = User::query()->create([
-                'name' => $validated['name'],
+                'name' => trim($validated['nombres'] . ' ' . $validated['apellidos']),
                 'email' => $validated['email'],
                 'password' => $validated['password'],
                 'role_id' => $roleCliente->id,
@@ -172,7 +171,7 @@ class PacienteController extends Controller
             ]);
         });
 
-        return redirect()->route('pacientes.index')->with('success', 'Cliente creado correctamente.');
+        return redirect()->route('pacientes.index')->with('success', 'Paciente creado correctamente.');
     }
 
     public function edit(Paciente $paciente)
@@ -186,7 +185,6 @@ class PacienteController extends Controller
     public function update(Request $request, Paciente $paciente): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'email', 'max:120', Rule::unique('users', 'email')->ignore($paciente->user_id)],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'tipo_documento' => ['required', Rule::in(self::TIPOS_DOCUMENTO)],
@@ -209,7 +207,7 @@ class PacienteController extends Controller
 
         DB::transaction(function () use ($validated, $paciente): void {
             if ($paciente->user) {
-                $paciente->user->name = $validated['name'];
+                $paciente->user->name = trim($validated['nombres'] . ' ' . $validated['apellidos']);
                 $paciente->user->email = $validated['email'];
 
                 if (! empty($validated['password'])) {
@@ -234,7 +232,7 @@ class PacienteController extends Controller
             ]);
         });
 
-        return redirect()->route('pacientes.index')->with('success', 'Cliente actualizado correctamente.');
+        return redirect()->route('pacientes.index')->with('success', 'Paciente actualizado correctamente.');
     }
 
     public function toggle(Paciente $paciente): RedirectResponse
@@ -248,7 +246,7 @@ class PacienteController extends Controller
 
         $estado = $paciente->user->activo ? 'activado' : 'desactivado';
 
-        return redirect()->route('pacientes.index')->with('success', "Cliente {$estado} correctamente.");
+        return redirect()->route('pacientes.index')->with('success', "Paciente {$estado} correctamente.");
     }
 
     public function destroy(Paciente $paciente): RedirectResponse
