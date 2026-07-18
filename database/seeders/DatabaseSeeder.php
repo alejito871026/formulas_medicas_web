@@ -16,13 +16,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $seedInventario = filter_var(env('DEMO_SEED_INVENTARIO', true), FILTER_VALIDATE_BOOL);
+        $seedInventario = filter_var(env('DEMO_SEED_INVENTARIO', false), FILTER_VALIDATE_BOOL);
 
         $this->call(RoleSeeder::class);
         $this->call(EpsSeeder::class);
         $this->call(MedicamentoSeeder::class);
         if ($seedInventario) {
-            $this->call(InventarioSeeder::class);
+            try {
+                $this->call(InventarioSeeder::class);
+            } catch (\Throwable $exception) {
+                if ($this->command) {
+                    $this->command->warn('InventarioSeeder fallo y se omite para no bloquear el seeding demo: ' . $exception->getMessage());
+                }
+            }
+        } else {
+            if ($this->command) {
+                $this->command->warn('InventarioSeeder omitido (DEMO_SEED_INVENTARIO=false).');
+            }
         }
         $this->call(PacienteSeeder::class);
         $this->call(FormulaMedicaSeeder::class);
