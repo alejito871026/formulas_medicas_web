@@ -23,26 +23,23 @@ php artisan storage:link --force || true
 # Iniciar PHP-FPM en segundo plano
 php-fpm -D
 
-# Ejecutar tareas de base de datos en segundo plano para no bloquear el arranque del puerto HTTP.
+# Ejecutar bootstrap de BD en segundo plano para no bloquear el arranque HTTP en Render.
 (
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Iniciando migraciones y seeders..." \
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Iniciando migraciones y seeders base..." \
         >> /var/www/html/storage/logs/bootstrap-db.log
 
-    echo "Ejecutando migraciones de base de datos..."
     php artisan migrate --force \
         >> /var/www/html/storage/logs/bootstrap-db.log 2>&1
 
-    echo "Sembrando roles base..."
     php artisan db:seed --class=RoleSeeder --force \
         >> /var/www/html/storage/logs/bootstrap-db.log 2>&1
 
-    echo "Sembrando usuarios base de despliegue..."
     php artisan db:seed --class=RenderUsersSeeder --force \
         >> /var/www/html/storage/logs/bootstrap-db.log 2>&1
 
-    # Sembrado demo opcional para entornos de exhibicion/seminario.
     if [ "$RUN_DEMO_SEEDERS" = "true" ]; then
-        echo "RUN_DEMO_SEEDERS=true: ejecutando DatabaseSeeder..."
+        echo "RUN_DEMO_SEEDERS=true: ejecutando DatabaseSeeder..." \
+            >> /var/www/html/storage/logs/bootstrap-db.log
         php artisan db:seed --class=DatabaseSeeder --force \
             >> /var/www/html/storage/logs/demo-seeder.log 2>&1
         echo "$(date '+%Y-%m-%d %H:%M:%S') DatabaseSeeder finalizado" \
@@ -52,11 +49,11 @@ php-fpm -D
             >> /var/www/html/storage/logs/bootstrap-db.log
     fi
 
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Tareas de base de datos finalizadas." \
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Bootstrap de BD finalizado." \
         >> /var/www/html/storage/logs/bootstrap-db.log
 ) &
 
-echo "Tareas de base de datos lanzadas en segundo plano."
+echo "Bootstrap de base de datos lanzado en segundo plano."
 
 # Arrancar el servidor web Nginx en primer plano
 echo "Iniciando Nginx..."
