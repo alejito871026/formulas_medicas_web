@@ -25,46 +25,33 @@ php-fpm -D
 
 # Ejecutar bootstrap de BD en segundo plano para no bloquear el arranque HTTP en Render.
 (
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Iniciando migraciones y seeders base..." \
-        >> /var/www/html/storage/logs/bootstrap-db.log
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Iniciando migraciones y seeders base..." | tee -a /var/www/html/storage/logs/bootstrap-db.log
 
-    php artisan migrate --force \
-        >> /var/www/html/storage/logs/bootstrap-db.log 2>&1
+    php artisan migrate --force 2>&1 | tee -a /var/www/html/storage/logs/bootstrap-db.log
 
-    php artisan db:seed --class=RoleSeeder --force \
-        >> /var/www/html/storage/logs/bootstrap-db.log 2>&1
+    php artisan db:seed --class=RoleSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/bootstrap-db.log
 
-    php artisan db:seed --class=RenderUsersSeeder --force \
-        >> /var/www/html/storage/logs/bootstrap-db.log 2>&1
+    php artisan db:seed --class=RenderUsersSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/bootstrap-db.log
 
-    if [ "$RUN_DEMO_SEEDERS" = "true" ]; then
-        echo "RUN_DEMO_SEEDERS=true: ejecutando DatabaseSeeder..." \
-            >> /var/www/html/storage/logs/bootstrap-db.log
-        php artisan db:seed --class=DatabaseSeeder --force \
-            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
+    RUN_DEMO_SEEDERS_NORMALIZED=$(echo "${RUN_DEMO_SEEDERS:-false}" | tr '[:upper:]' '[:lower:]')
 
-        echo "Forzando seeders clave para dashboard (formulas, citas, entregas)..." \
-            >> /var/www/html/storage/logs/bootstrap-db.log
-        php artisan db:seed --class=FormulaMedicaSeeder --force \
-            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
-        php artisan db:seed --class=FormulaMedicaItemSeeder --force \
-            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
-        php artisan db:seed --class=CitaSeeder --force \
-            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
-        php artisan db:seed --class=EntregaSeeder --force \
-            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
-        php artisan db:seed --class=BackfillLastSixMonthsSeeder --force \
-            >> /var/www/html/storage/logs/demo-seeder.log 2>&1
+    if [ "$RUN_DEMO_SEEDERS_NORMALIZED" = "true" ] || [ "$RUN_DEMO_SEEDERS_NORMALIZED" = "1" ] || [ "$RUN_DEMO_SEEDERS_NORMALIZED" = "yes" ]; then
+        echo "RUN_DEMO_SEEDERS=${RUN_DEMO_SEEDERS:-false}: ejecutando DatabaseSeeder..." | tee -a /var/www/html/storage/logs/bootstrap-db.log
+        php artisan db:seed --class=DatabaseSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
 
-        echo "$(date '+%Y-%m-%d %H:%M:%S') DatabaseSeeder finalizado" \
-            >> /var/www/html/storage/logs/demo-seeder.log
+        echo "Forzando seeders clave para dashboard (formulas, citas, entregas)..." | tee -a /var/www/html/storage/logs/bootstrap-db.log
+        php artisan db:seed --class=FormulaMedicaSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
+        php artisan db:seed --class=FormulaMedicaItemSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
+        php artisan db:seed --class=CitaSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
+        php artisan db:seed --class=EntregaSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
+        php artisan db:seed --class=BackfillLastSixMonthsSeeder --force 2>&1 | tee -a /var/www/html/storage/logs/demo-seeder.log
+
+        echo "$(date '+%Y-%m-%d %H:%M:%S') DatabaseSeeder finalizado" | tee -a /var/www/html/storage/logs/demo-seeder.log
     else
-        echo "RUN_DEMO_SEEDERS desactivado: se omite DatabaseSeeder." \
-            >> /var/www/html/storage/logs/bootstrap-db.log
+        echo "RUN_DEMO_SEEDERS=${RUN_DEMO_SEEDERS:-false}: desactivado, se omite DatabaseSeeder." | tee -a /var/www/html/storage/logs/bootstrap-db.log
     fi
 
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Bootstrap de BD finalizado." \
-        >> /var/www/html/storage/logs/bootstrap-db.log
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Bootstrap de BD finalizado." | tee -a /var/www/html/storage/logs/bootstrap-db.log
 ) &
 
 echo "Bootstrap de base de datos lanzado en segundo plano."
