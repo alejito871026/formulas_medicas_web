@@ -28,7 +28,15 @@ class OtpVerificationController extends Controller
             return $this->redirectToLoginAfterExpiredOtp($request, $user);
         }
 
-        return view('auth.otp-verify', ['email' => $user->email]);
+        $expiresInSeconds = $user->otp_expires_at
+            ? max(0, now()->diffInSeconds($user->otp_expires_at, false))
+            : 0;
+
+        return view('auth.otp-verify', [
+            'email' => $user->email,
+            'otpExpiresInSeconds' => $expiresInSeconds,
+            'loginUrl' => route('login'),
+        ]);
     }
 
     public function verify(Request $request): RedirectResponse

@@ -6,7 +6,7 @@
         <title>Verificar codigo | Formulas Medicas</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="min-h-screen bg-slate-950 text-slate-100">
+    <body class="min-h-screen bg-slate-950 text-slate-100" data-otp-expires-in="{{ $otpExpiresInSeconds ?? 0 }}" data-login-url="{{ $loginUrl ?? route('login') }}">
         <main class="relative mx-auto flex min-h-screen w-full items-center justify-center overflow-hidden px-6 py-10">
             <div class="pointer-events-none absolute inset-0">
                 <div class="absolute -left-16 top-10 h-80 w-80 rounded-full bg-cyan-400/20 blur-3xl"></div>
@@ -24,6 +24,15 @@
                     <p class="mt-2 text-sm leading-6 text-slate-300">
                         Enviamos un codigo de 6 digitos a <strong>{{ $email }}</strong>.
                     </p>
+
+                    <div class="mt-4 inline-flex items-center gap-2 rounded-xl border border-amber-300/30 bg-amber-400/10 px-4 py-2 text-sm text-amber-200">
+                        Tiempo restante:
+                        <strong id="otp-countdown" class="font-mono tracking-wide">02:00</strong>
+                    </div>
+
+                    <div id="otp-expired-alert" class="mt-3 hidden rounded-xl border border-red-300/30 bg-red-400/10 px-4 py-3 text-sm text-red-200">
+                        El codigo expiro. Seras redirigido al inicio de sesion.
+                    </div>
 
                     @if(session('status'))
                         <div class="mt-4 rounded-xl border border-emerald-300/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200">
@@ -43,7 +52,7 @@
                             @enderror
                         </div>
 
-                        <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-cyan-500 to-emerald-500 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:from-cyan-400 hover:to-emerald-400">
+                        <button id="otp-submit" type="submit" class="w-full rounded-2xl bg-gradient-to-r from-cyan-500 to-emerald-500 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:from-cyan-400 hover:to-emerald-400">
                             Verificar codigo
                         </button>
                     </form>
@@ -61,5 +70,70 @@
                 </div>
             </section>
         </main>
+
+        <script>
+            (() => {
+                const countdownEl = document.getElementById('otp-countdown');
+                const expiredAlertEl = document.getElementById('otp-expired-alert');
+                const codeInputEl = document.getElementById('code');
+                const submitButtonEl = document.getElementById('otp-submit');
+                const loginUrl = document.body.dataset.loginUrl || '/login';
+
+                let remainingSeconds = Number.parseInt(document.body.dataset.otpExpiresIn ?? '0', 10);
+
+                const formatTime = (seconds) => {
+                    const safeSeconds = Math.max(0, seconds);
+                    const minutes = Math.floor(safeSeconds / 60);
+                    const secs = safeSeconds % 60;
+                    return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                };
+
+                const setExpiredState = () => {
+                    if (countdownEl) {
+                        countdownEl.textContent = '00:00';
+                    }
+
+                    if (expiredAlertEl) {
+                        expiredAlertEl.classList.remove('hidden');
+                    }
+
+                    if (codeInputEl) {
+                        codeInputEl.disabled = true;
+                    }
+
+                    if (submitButtonEl) {
+                        submitButtonEl.disabled = true;
+                        submitButtonEl.classList.add('opacity-60', 'cursor-not-allowed');
+                    }
+
+                    setTimeout(() => {
+                        window.location.href = loginUrl;
+                    }, 1500);
+                };
+
+                if (!Number.isFinite(remainingSeconds) || remainingSeconds <= 0) {
+                    setExpiredState();
+                    return;
+                }
+
+                if (countdownEl) {
+                    countdownEl.textContent = formatTime(remainingSeconds);
+                }
+
+                const intervalId = setInterval(() => {
+                    remainingSeconds -= 1;
+
+                    if (remainingSeconds <= 0) {
+                        clearInterval(intervalId);
+                        setExpiredState();
+                        return;
+                    }
+
+                    if (countdownEl) {
+                        countdownEl.textContent = formatTime(remainingSeconds);
+                    }
+                }, 1000);
+            })();
+        </script>
     </body>
 </html>

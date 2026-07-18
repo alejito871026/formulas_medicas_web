@@ -13,6 +13,13 @@ class DashboardController extends Controller
         $user = $request->user();
         $rol = $user?->role?->nombre ?? 'sin_rol';
         $startRange = Carbon::now()->startOfMonth()->subMonths(5);
+        $dbDriver = DB::connection()->getDriverName();
+
+        $yearMonthExpression = static function (string $column) use ($dbDriver): string {
+            return $dbDriver === 'pgsql'
+                ? "to_char({$column}, 'YYYY-MM')"
+                : "DATE_FORMAT({$column}, '%Y-%m')";
+        };
 
         $months = collect(range(5, 0))->map(function (int $offset) {
             return Carbon::now()->startOfMonth()->subMonths($offset);
@@ -20,17 +27,21 @@ class DashboardController extends Controller
 
         $labelsMes = $months->map(fn (Carbon $month): string => $month->translatedFormat('M Y'))->values()->all();
 
+        $clientesYmExpr = $yearMonthExpression('created_at');
+
         $clientesCrudos = DB::table('pacientes')
-            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as ym, COUNT(*) as total")
+            ->selectRaw("{$clientesYmExpr} as ym, COUNT(*) as total")
             ->where('created_at', '>=', $startRange)
-            ->groupBy('ym')
+            ->groupBy(DB::raw($clientesYmExpr))
             ->pluck('total', 'ym');
 
+        $atencionesYmExpr = $yearMonthExpression('fecha_entrega');
+
         $atencionesCrudas = DB::table('entregas')
-            ->selectRaw("DATE_FORMAT(fecha_entrega, '%Y-%m') as ym, COUNT(*) as total")
+            ->selectRaw("{$atencionesYmExpr} as ym, COUNT(*) as total")
             ->where('fecha_entrega', '>=', $startRange)
             ->whereIn('estado_entrega', ['entregada', 'completa', 'atendida'])
-            ->groupBy('ym')
+            ->groupBy(DB::raw($atencionesYmExpr))
             ->pluck('total', 'ym');
 
         $clientesPorMes = $months->map(function (Carbon $month) use ($clientesCrudos): int {
@@ -57,10 +68,12 @@ class DashboardController extends Controller
         $totalItemsFormulados = (int) DB::table('formula_medicamento')->count();
         $totalMedicamentos = (int) DB::table('medicamentos')->count();
 
+        $entregasYmExpr = $yearMonthExpression('fecha_entrega');
+
         $entregasMesCrudas = DB::table('entregas')
-            ->selectRaw("DATE_FORMAT(fecha_entrega, '%Y-%m') as ym, COUNT(*) as total")
+            ->selectRaw("{$entregasYmExpr} as ym, COUNT(*) as total")
             ->where('fecha_entrega', '>=', $startRange)
-            ->groupBy('ym')
+            ->groupBy(DB::raw($entregasYmExpr))
             ->pluck('total', 'ym');
 
         $entregasPorMes = $months->map(function (Carbon $month) use ($entregasMesCrudas): int {
@@ -125,18 +138,22 @@ class DashboardController extends Controller
                 ->whereIn('estado', ['programada', 'confirmada', 'reprogramada'])
                 ->count();
 
+            $formulasYmExpr = $yearMonthExpression('fecha_formula');
+
             $formulasMesCrudas = DB::table('formulas_medicas')
-                ->selectRaw("DATE_FORMAT(fecha_formula, '%Y-%m') as ym, COUNT(*) as total")
+                ->selectRaw("{$formulasYmExpr} as ym, COUNT(*) as total")
                 ->where('paciente_id', $pacienteId)
                 ->where('fecha_formula', '>=', $startRange)
-                ->groupBy('ym')
+                ->groupBy(DB::raw($formulasYmExpr))
                 ->pluck('total', 'ym');
 
+            $citasYmExpr = $yearMonthExpression('fecha_cita');
+
             $citasMesCrudas = DB::table('citas')
-                ->selectRaw("DATE_FORMAT(fecha_cita, '%Y-%m') as ym, COUNT(*) as total")
+                ->selectRaw("{$citasYmExpr} as ym, COUNT(*) as total")
                 ->where('paciente_id', $pacienteId)
                 ->where('fecha_cita', '>=', $startRange)
-                ->groupBy('ym')
+                ->groupBy(DB::raw($citasYmExpr))
                 ->pluck('total', 'ym');
 
             $misFormulasPorMes = $months->map(function (Carbon $month) use ($formulasMesCrudas): int {
