@@ -10,7 +10,10 @@ COPY . .
 RUN npm run build
 
 # Etapa 2: Instalar dependencias PHP con Composer (oficial)
-FROM composer:2 AS composer
+FROM php:8.4-cli-alpine AS composer
+RUN apk add --no-cache git unzip libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install gd zip
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY . .
 RUN composer install --no-dev --optimize-autoloader --no-interaction
@@ -18,9 +21,9 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Etapa 3: Servidor PHP de produccion (PHP 8.4)
 FROM php:8.4-fpm-alpine
 
-# Instalar dependencias del sistema y soporte para PostgreSQL
-RUN apk add --no-cache nginx postgresql-dev
-RUN docker-php-ext-install pdo pdo_pgsql
+# Instalar dependencias del sistema y soporte para PostgreSQL/Excel
+RUN apk add --no-cache nginx postgresql-dev libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install pdo pdo_pgsql gd zip
 
 WORKDIR /var/www/html
 COPY . .
