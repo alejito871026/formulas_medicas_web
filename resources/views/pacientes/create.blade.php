@@ -85,7 +85,7 @@
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">EPS</label>
-                <select name="eps" required class="select-control w-full">
+                <select name="eps" required class="select-control w-full" data-searchable="true" data-search-limit="10" data-search-placeholder="Busca una EPS por nombre">
                     <option value="">Selecciona una EPS</option>
                     @foreach ($epsActivas as $ep)
                         <option value="{{ $ep->nombre }}" @selected(old('eps') === $ep->nombre)>{{ $ep->nombre }}</option>

@@ -33,7 +33,7 @@ class RenderUsersSeeder extends Seeder
             ]
         );
 
-        if (isset($roles['cliente'])) {
+        if (isset($roles['paciente'])) {
             $pacienteEmail = env('DEPLOY_PACIENTE_EMAIL', 'paciente.demo@formulas.test');
 
             $pacienteUser = User::query()->updateOrCreate(
@@ -41,7 +41,7 @@ class RenderUsersSeeder extends Seeder
                 [
                     'name' => trim(env('DEPLOY_PACIENTE_NOMBRES', 'Paciente') . ' ' . env('DEPLOY_PACIENTE_APELLIDOS', 'Demo')),
                     'password' => env('DEPLOY_PACIENTE_PASSWORD', 'Paciente123!'),
-                    'role_id' => $roles['cliente'],
+                    'role_id' => $roles['paciente'],
                     'activo' => true,
                     'telefono' => env('DEPLOY_PACIENTE_TELEFONO', '3000000001'),
                     'direccion' => env('DEPLOY_PACIENTE_DIRECCION', 'Cartago'),

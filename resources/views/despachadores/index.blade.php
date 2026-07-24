@@ -66,11 +66,14 @@
                                         <button type="submit" class="btn btn-warning">{{ $despachador->activo ? 'Desactivar' : 'Activar' }}</button>
                                     </form>
 
+                                    {{-- Boton de eliminar oculto temporalmente --}}
+                                    {{--
                                     <form method="POST" action="{{ route('despachadores.destroy', $despachador) }}" data-feedback-form="true" onsubmit="return confirm('Se eliminara el despachador. Deseas continuar?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger">Eliminar</button>
                                     </form>
+                                    --}}
                                 </div>
                             </td>
                         </tr>

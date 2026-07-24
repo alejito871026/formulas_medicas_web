@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
 
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-	Route::middleware('rol:cliente,administrativo')->group(function () {
+	Route::middleware('rol:paciente,administrativo')->group(function () {
 		Route::get('/formulas-medicas', 'App\\Http\\Controllers\\FormulaMedicaController@index')->name('formulas.index');
 		Route::get('/formulas-medicas/crear', 'App\\Http\\Controllers\\FormulaMedicaController@create')->name('formulas.create');
 		Route::post('/formulas-medicas', 'App\\Http\\Controllers\\FormulaMedicaController@store')->name('formulas.store');
@@ -90,6 +90,8 @@ Route::middleware('auth')->group(function () {
 
 		Route::get('/pacientes', 'App\\Http\\Controllers\\PacienteController@index')->name('pacientes.index');
 		Route::get('/pacientes/crear', 'App\\Http\\Controllers\\PacienteController@create')->name('pacientes.create');
+		Route::get('/pacientes/importar/modelo', 'App\\Http\\Controllers\\PacienteController@downloadTemplate')->name('pacientes.import.template');
+		Route::post('/pacientes/importar', 'App\\Http\\Controllers\\PacienteController@import')->name('pacientes.import');
 		Route::post('/pacientes', 'App\\Http\\Controllers\\PacienteController@store')->name('pacientes.store');
 		Route::get('/pacientes/{paciente}/editar', 'App\\Http\\Controllers\\PacienteController@edit')->name('pacientes.edit');
 		Route::put('/pacientes/{paciente}', 'App\\Http\\Controllers\\PacienteController@update')->name('pacientes.update');

@@ -13,7 +13,7 @@
                 'titulo' => 'Dashboard de Despacho',
                 'subtitulo' => 'Seguimiento de entregas, inventario critico y demanda de medicamentos.',
             ],
-            'cliente' => [
+            'paciente' => [
                 'titulo' => 'Mi Panel de Paciente',
                 'subtitulo' => 'Estado de formulas, entregas y citas para gestionar tu proceso.',
             ],
@@ -319,7 +319,7 @@
             });
         })();
         </script>
-    @elseif ($rol === 'cliente')
+    @elseif ($rol === 'paciente')
         <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             <article class="module-card p-5">
                 <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Mis formulas</p>

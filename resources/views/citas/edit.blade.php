@@ -28,7 +28,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Paciente</label>
-                        <select name="paciente_id" required @disabled($pacienteBloqueado ?? false) class="select-control w-full">
+                        <select name="paciente_id" required @disabled($pacienteBloqueado ?? false) class="select-control w-full" data-searchable="true" data-search-limit="10" data-search-placeholder="Busca por nombre o documento">
                             @foreach ($pacientes as $paciente)
                                 <option value="{{ $paciente->id }}" @selected((string) old('paciente_id', $cita->paciente_id) === (string) $paciente->id)>
                                     {{ $paciente->nombres }} {{ $paciente->apellidos }} · {{ $paciente->numero_documento }}
@@ -42,7 +42,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Formula medica (opcional)</label>
-                        <select id="formula_medica_id" name="formula_medica_id" class="select-control w-full">
+                        <select id="formula_medica_id" name="formula_medica_id" class="select-control w-full" data-searchable="true" data-search-limit="10" data-search-placeholder="Busca por numero de formula">
                             <option value="">Sin formula asociada</option>
                             @foreach ($formulas as $formula)
                                 <option value="{{ $formula->id }}" data-paciente-id="{{ $formula->paciente_id }}" @selected((string) old('formula_medica_id', $cita->formula_medica_id) === (string) $formula->id)>
@@ -121,6 +121,8 @@
             if (!selectedStillVisible) {
                 formulaSelect.value = '';
             }
+
+            formulaSelect.dispatchEvent(new Event('change', { bubbles: true }));
         };
 
         syncFormulas();

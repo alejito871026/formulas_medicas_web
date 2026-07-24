@@ -90,11 +90,14 @@
 									<div class="table-actions">
 										<a href="{{ route('formulas.edit', $formula) }}" class="btn btn-muted">Editar</a>
 
+										{{-- Boton de eliminar oculto temporalmente --}}
+										{{--
 										<form method="POST" action="{{ route('formulas.destroy', $formula) }}" data-feedback-form="true" onsubmit="return confirm('Se eliminara la formula medica. Deseas continuar?');">
 											@csrf
 											@method('DELETE')
 											<button type="submit" class="btn btn-danger">Eliminar</button>
 										</form>
+										--}}
 									</div>
 								</td>
 							@endif

@@ -17,10 +17,10 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'rol' => ['nullable', 'in:cliente,despachador,administrativo'],
+            'rol' => ['nullable', 'in:paciente,despachador,administrativo'],
         ]);
 
-        $roleName = $validated['rol'] ?? 'cliente';
+        $roleName = $validated['rol'] ?? 'paciente';
         $role = Role::query()->firstWhere('nombre', $roleName);
 
         if (! $role) {

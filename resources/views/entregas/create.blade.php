@@ -27,7 +27,7 @@
 
                     <div class="entity-form-span-2">
                         <label class="mb-1 block text-sm font-medium text-slate-700">Item de formula</label>
-                        <select name="formula_medicamento_id" required class="select-control w-full">
+                        <select name="formula_medicamento_id" required class="select-control w-full" data-searchable="true" data-search-limit="10" data-search-placeholder="Busca por formula, paciente o medicamento">
                             <option value="">Selecciona item</option>
                             @foreach ($itemsFormula as $item)
                                 <option value="{{ $item->id }}" @selected((string) old('formula_medicamento_id') === (string) $item->id)>

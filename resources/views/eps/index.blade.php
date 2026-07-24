@@ -119,11 +119,14 @@
                                             </button>
                                         </form>
 
+                                        {{-- Boton de eliminar oculto temporalmente --}}
+                                        {{--
                                         <form method="POST" action="{{ route('eps.destroy', $ep) }}" data-feedback-form="true" onsubmit="return confirm('Se eliminara la EPS. Deseas continuar?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">Eliminar</button>
                                         </form>
+                                        --}}
                                     </div>
                                 </td>
                             </tr>

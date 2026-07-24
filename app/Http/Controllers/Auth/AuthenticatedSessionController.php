@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\ValidationException;
 
@@ -58,6 +59,15 @@ class AuthenticatedSessionController extends Controller
 
         $remember = $request->boolean('remember');
         $otp = $authUser->generateOtp();
+
+        if (app()->environment('testing')) {
+            Log::channel('stderr')->info('OTP generado para pruebas', [
+                'email' => $authUser->email,
+                'otp' => $otp,
+            ]);
+
+            error_log(sprintf('OTP_TESTING_LOGIN email=%s otp=%s', $authUser->email, $otp));
+        }
 
         $this->resendEmailService->send(
             $authUser->email,

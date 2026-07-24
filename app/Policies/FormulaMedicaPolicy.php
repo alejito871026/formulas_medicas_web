@@ -10,7 +10,7 @@ class FormulaMedicaPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('cliente', 'despachador', 'administrativo');
+        return $user->hasRole('paciente', 'despachador', 'administrativo');
     }
 
     public function view(User $user, FormulaMedica $formulaMedica): bool
@@ -21,7 +21,7 @@ class FormulaMedicaPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasRole('cliente', 'administrativo');
+        return $user->hasRole('paciente', 'administrativo');
     }
 
     public function createForPaciente(User $user, Paciente $paciente): bool

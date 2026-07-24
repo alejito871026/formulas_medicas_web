@@ -74,11 +74,14 @@
 								<div class="table-actions">
 									<a href="{{ route('entregas.edit', $entrega) }}" class="btn btn-muted">Editar</a>
 
+									{{-- Boton de eliminar oculto temporalmente --}}
+									{{--
 									<form method="POST" action="{{ route('entregas.destroy', $entrega) }}" data-feedback-form="true" onsubmit="return confirm('Se eliminara el registro de entrega. Deseas continuar?');">
 										@csrf
 										@method('DELETE')
 										<button type="submit" class="btn btn-danger">Eliminar</button>
 									</form>
+									--}}
 								</div>
 							</td>
 						</tr>

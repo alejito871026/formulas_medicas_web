@@ -23,7 +23,7 @@ class PacienteSeeder extends Seeder
 
     public function run(): void
     {
-        $rolCliente = Role::query()->firstWhere('nombre', 'cliente');
+        $rolCliente = Role::query()->firstWhere('nombre', 'paciente');
         $epsDisponibles = Eps::query()->pluck('nombre')->values()->all();
 
         if (! $rolCliente || empty($epsDisponibles)) {

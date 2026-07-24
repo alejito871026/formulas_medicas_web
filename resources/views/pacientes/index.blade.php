@@ -16,6 +16,30 @@
 
 @section('content')
 	<div class="module-card">
+		<div class="border-b border-slate-200 bg-slate-50 px-4 py-4">
+			<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+				<p class="text-sm font-semibold text-slate-700">Carga masiva de pacientes</p>
+				<a href="{{ route('pacientes.import.template') }}" class="btn btn-muted">Descargar modelo CSV</a>
+			</div>
+
+			<form method="POST" action="{{ route('pacientes.import') }}" enctype="multipart/form-data" data-feedback-form="true" class="module-filter-form">
+				@csrf
+				<select name="eps_destino" required class="select-control" data-searchable="true" data-search-limit="10" data-search-placeholder="Selecciona la EPS de destino">
+					<option value="">EPS de destino para la carga masiva</option>
+					@foreach (($epsActivas ?? collect()) as $epsNombre)
+						<option value="{{ $epsNombre }}">{{ $epsNombre }}</option>
+					@endforeach
+				</select>
+				<input type="file" name="archivo_pacientes" required accept=".csv,.txt,.xlsx,.xls" class="input-control" />
+				<button type="submit" class="btn btn-teal">Importar pacientes</button>
+			</form>
+			<div class="mt-3 rounded-xl border border-slate-200 bg-white px-3 py-3 text-xs text-slate-600">
+				<p><strong>Requeridos:</strong> tipo_documento, numero_documento, nombres, apellidos, email, departamento, municipio.</p>
+				<p class="mt-1"><strong>Opcionales:</strong> telefono, fecha_nacimiento (YYYY-MM-DD), direccion, password.</p>
+				<p class="mt-1">Si no envias password, el sistema usa numero_documento como clave inicial.</p>
+			</div>
+		</div>
+
 		<div class="module-toolbar">
 			<form id="filtro-clientes-form" method="GET" action="{{ route('pacientes.index') }}" class="module-filter-form">
 				<input id="filtro-busqueda" type="text" name="q" value="{{ $busqueda ?? '' }}" placeholder="Buscar por nombre, documento o correo (min. 6)" class="input-control filter-search-control">
@@ -84,6 +108,8 @@
 										</button>
 									</form>
 
+									{{-- Boton de eliminar oculto temporalmente --}}
+									{{--
 									<form method="POST" action="{{ route('pacientes.destroy', $paciente) }}" data-feedback-form="true" onsubmit="return confirm('Esta accion eliminara el paciente y su usuario. Deseas continuar?');">
 										@csrf
 										@method('DELETE')
@@ -91,6 +117,7 @@
 											Eliminar
 										</button>
 									</form>
+									--}}
 								</div>
 							</td>
 						</tr>

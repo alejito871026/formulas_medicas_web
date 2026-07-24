@@ -28,7 +28,7 @@
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Paciente</label>
-                        <select name="paciente_id" required @disabled($pacienteBloqueado ?? false) class="select-control w-full">
+                        <select name="paciente_id" required @disabled($pacienteBloqueado ?? false) class="select-control w-full" data-searchable="true" data-search-limit="10" data-search-placeholder="Busca por nombre o documento">
                             @foreach ($pacientes as $paciente)
                                 <option value="{{ $paciente->id }}" @selected((string) old('paciente_id', $formula->paciente_id) === (string) $paciente->id)>
                                     {{ $paciente->nombres }} {{ $paciente->apellidos }} · {{ $paciente->numero_documento }}

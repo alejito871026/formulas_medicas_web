@@ -80,7 +80,7 @@ class RegisteredUserController extends Controller
             ])->withInput();
         }
 
-        $rolePaciente = Role::query()->firstWhere('nombre', 'cliente');
+        $rolePaciente = Role::query()->firstWhere('nombre', 'paciente');
 
         if (! $rolePaciente) {
             return back()->withErrors([

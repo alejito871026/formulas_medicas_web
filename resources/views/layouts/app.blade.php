@@ -10,7 +10,7 @@
         @php
             $user = auth()->user();
             $rol = $user?->role?->nombre;
-            $rolLabel = $rol === 'cliente' ? 'paciente' : ($rol ?? 'sin rol');
+            $rolLabel = $rol ?? 'sin rol';
             $menu = [
                 ['label' => 'Citas', 'route' => 'citas.index', 'ability' => 'acceso-citas'],
                 ['label' => 'Dashboard', 'route' => 'dashboard', 'ability' => 'acceso-dashboard'],

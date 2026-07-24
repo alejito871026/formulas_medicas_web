@@ -11,6 +11,7 @@
         "dedoc/scramble": "^0.13.33",
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
+        "phpoffice/phpspreadsheet": "^2.2",
         "tymon/jwt-auth": "*"
     },
     "require-dev": {

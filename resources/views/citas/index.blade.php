@@ -102,11 +102,14 @@
                                     <div class="table-actions">
                                         <a href="{{ route('citas.edit', $cita) }}" class="btn btn-muted">Editar</a>
 
+                                        {{-- Boton de eliminar oculto temporalmente --}}
+                                        {{--
                                         <form method="POST" action="{{ route('citas.destroy', $cita) }}" data-feedback-form="true" onsubmit="return confirm('Se eliminara la cita. Deseas continuar?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">Eliminar</button>
                                         </form>
+                                        --}}
                                     </div>
                                 </td>
                             @endif

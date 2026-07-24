@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(FormulaMedica::class, FormulaMedicaPolicy::class);
 
         Gate::define('acceso-dashboard', fn (User $user): bool =>
-            $user->hasRole('cliente', 'despachador', 'administrativo')
+            $user->hasRole('paciente', 'despachador', 'administrativo')
         );
 
         Gate::define('acceso-pacientes', fn (User $user): bool =>
@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
         );
 
         Gate::define('acceso-formulas', fn (User $user): bool =>
-            $user->hasRole('cliente', 'administrativo')
+            $user->hasRole('paciente', 'administrativo')
         );
 
         Gate::define('acceso-medicamentos', fn (User $user): bool =>
@@ -55,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
         );
 
         Gate::define('acceso-citas', fn (User $user): bool =>
-            $user->hasRole('cliente', 'administrativo')
+            $user->hasRole('paciente', 'administrativo')
         );
 
         Gate::define('acceso-eps', fn (User $user): bool =>

@@ -72,11 +72,14 @@
 								<div class="table-actions">
 									<a href="{{ route('inventarios.edit', $inventario) }}" class="btn btn-muted">Editar</a>
 
+									{{-- Boton de eliminar oculto temporalmente --}}
+									{{--
 									<form method="POST" action="{{ route('inventarios.destroy', $inventario) }}" data-feedback-form="true" onsubmit="return confirm('Se eliminara el lote de inventario. Deseas continuar?');">
 										@csrf
 										@method('DELETE')
 										<button type="submit" class="btn btn-danger">Eliminar</button>
 									</form>
+									--}}
 								</div>
 							</td>
 						</tr>

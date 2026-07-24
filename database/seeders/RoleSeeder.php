@@ -10,7 +10,7 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            ['nombre' => 'cliente', 'descripcion' => 'Paciente o usuario final del sistema'],
+            ['nombre' => 'paciente', 'descripcion' => 'Paciente o usuario final del sistema'],
             ['nombre' => 'despachador', 'descripcion' => 'Personal del dispensario medico'],
             ['nombre' => 'administrativo', 'descripcion' => 'Administrador funcional del sistema'],
         ];

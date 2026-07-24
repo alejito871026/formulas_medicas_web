@@ -84,7 +84,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Paciente Demo',
                 'password' => 'password123',
-                'role_id' => $roles['cliente'] ?? null,
+                'role_id' => $roles['paciente'] ?? null,
             ]
         );
 
@@ -93,7 +93,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Paciente Test',
                 'password' => 'password123',
-                'role_id' => $roles['cliente'] ?? null,
+                'role_id' => $roles['paciente'] ?? null,
             ]
         );
     }

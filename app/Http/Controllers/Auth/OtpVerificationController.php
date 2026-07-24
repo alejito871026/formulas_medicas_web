@@ -8,6 +8,7 @@ use App\Services\ResendEmailService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 
 class OtpVerificationController extends Controller
@@ -81,6 +82,15 @@ class OtpVerificationController extends Controller
         }
 
         $otp = $user->generateOtp();
+
+        if (app()->environment('testing')) {
+            Log::channel('stderr')->info('OTP reenviado para pruebas', [
+                'email' => $user->email,
+                'otp' => $otp,
+            ]);
+
+            error_log(sprintf('OTP_TESTING_RESEND email=%s otp=%s', $user->email, $otp));
+        }
 
         $this->resendEmailService->send(
             $user->email,
