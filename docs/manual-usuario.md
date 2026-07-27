@@ -144,6 +144,25 @@ Procesos relevantes del sistema:
 - Trazabilidad de formulas, citas y entregas.
 - Notificaciones por correo ante cambios de estado (segun configuracion del entorno).
 
+## 8.1 Visualizacion de API con Swagger
+
+El proyecto incluye documentacion de API con interfaz Swagger/OpenAPI (implementada con Scramble) para consulta tecnica de endpoints.
+
+Rutas disponibles:
+
+- Interfaz web de documentacion: /docs/api
+- Especificacion OpenAPI en JSON: /docs/api.json
+
+Uso recomendado:
+
+1. Ingreso a la ruta /docs/api desde el navegador.
+2. Reviso endpoints, metodos HTTP, parametros y respuestas esperadas.
+3. Si necesito integrar otros sistemas, consumo la especificacion en /docs/api.json.
+
+Nota:
+
+- El acceso a esta documentacion depende de la configuracion de seguridad del entorno (middleware del proyecto).
+
 ## 9. Cierre de sesion
 
 Para finalizar la sesion de forma segura:

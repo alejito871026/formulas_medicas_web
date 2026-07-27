@@ -11,6 +11,7 @@ En este instructivo documento el proceso de instalacion, configuracion y puesta 
 - Base de datos: MySQL (soporta otros motores configurables en Laravel, incluyendo PostgreSQL).
 - Contenedores: Docker/Docker Compose (Laravel Sail en desarrollo y Dockerfile de produccion).
 - Reportes: Generacion de PDF mediante laravel-dompdf.
+- Documentacion API: Scramble (Swagger/OpenAPI).
 
 ## 3. Requisitos de software y hardware
 
@@ -101,6 +102,7 @@ MAIL_PASSWORD=clave_smtp
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=no-reply@tu-dominio.com
 MAIL_FROM_NAME="Formulas Medicas Web"
+API_VERSION=1.0.0
 
 Notas:
 
@@ -148,6 +150,27 @@ Variables posibles:
 
 - RUN_DEMO_SEEDERS=true para ejecutar datos de demostracion al iniciar contenedor productivo.
 - DATABASE_URL cuando la plataforma de hosting provee cadena de conexion unica.
+
+## 9.3 Documentacion API con Swagger (Scramble)
+
+Este proyecto tiene habilitada la documentacion de API para facilitar pruebas e integraciones.
+
+Rutas de consulta:
+
+- UI Swagger/OpenAPI: /docs/api
+- Documento OpenAPI JSON: /docs/api.json
+
+Configuracion relevante:
+
+- Archivo de configuracion: config/scramble.php
+- Middleware aplicado a la documentacion: web y RestrictedDocsAccess
+- Version de API configurable por variable de entorno API_VERSION
+
+Validacion recomendada:
+
+1. Levantar aplicacion.
+2. Abrir /docs/api y verificar carga de la interfaz.
+3. Abrir /docs/api.json y verificar respuesta JSON valida.
 
 ## 10. Procedimiento de despliegue
 
@@ -240,6 +263,10 @@ MAIL_MAILER=...
 - Ejecucion correcta de migraciones.
 - Ejecucion de seeders base (si aplica).
 - Inicio exitoso de Nginx y PHP-FPM.
+6. Verificar exposicion de documentacion API:
+
+- Abrir /docs/api.
+- Validar descarga/lectura de /docs/api.json.
 
 Notas operativas para Render:
 
