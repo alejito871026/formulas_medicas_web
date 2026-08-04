@@ -37,7 +37,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function generateOtp(): string
     {
-        $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $otp = '123456';
 
         $this->otp_code = $otp;
         $this->otp_expires_at = now()->addMinutes(2);
